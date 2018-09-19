@@ -16,8 +16,6 @@ fc1 = function(x) {
     return(-sum(PEL_TZ1(x) * c_RDN + 2 * PEL_TZ2(x) * c_RDN + PEL_TZ5(x) * c_RDN))
 }
 
-
-
 grad_fc1 = function(x) {
     return(-(grad_PEL_TZ1(x) * c_RDN + 2 * grad_PEL_TZ2(x) * c_RDN + grad_PEL_TZ5(x) * c_RDN))
 }
@@ -33,7 +31,7 @@ grad_fc1 = function(x) {
     opts <- list("algorithm" = "NLOPT_LD_SLSQP",
              "check_derivatives" = FALSE, # poka¿ raport ze sprawdzania pochodnych
              "maxeval" = 995000,           # 1000
-             "maxtime" = 6,              # [s]
+             "maxtime" = 3,              # [s]
              "local_opts" = local_opts,
              "xtol_rel" = 1.0e-14,
              "ftol_rel" = 1.0e-07,
@@ -59,10 +57,9 @@ grad_fc1 = function(x) {
     opt
 
 printVariables(opt$solution)
-a <- equalities(opt$solution)
-cat("\nConstraints:", a$constraints)
 
-
+cat("\nConstraints:", (equalities(opt$solution))$constraints)
+cat("\nConstraints abs sum:",sum(abs(a$constraints)))
 
     #cat("\n # # # # # ROZWIAZANIE # # # # # ")
     #cat("\nSolution (FC):", opt$objective)
