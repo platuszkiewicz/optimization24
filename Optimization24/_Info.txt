@@ -1,0 +1,7 @@
+Przyk³ad optymalizacji opartej o bibliotekê nloptr (wymaga podania gradientów)
+- rozwi¹zanie bardzo mocno zale¿y od punktu startowego
+- najczêœciej rozwi¹zanie nieco gorsze od Excela, ale zdarzaj¹ siê te¿ lepsze
+- wzglêdem solvera du¿e ró¿nice w zasilaniu 13 i 6 bar pomiedzy TZ2 i TZ5 (musz¹ mieæ zbli¿one charakterystyki), mimo ¿e Funkcja Celu podobna
+###################################################################################################################
+Przed pierwszym uruchomieniem nale¿y pobraæ biblioteki:
+install.packages("nloptr")
