@@ -112,3 +112,14 @@ constraintsUB <- c(constraintsUB, rep(mST_TZ5_up25.max, 24))
 constraintsUB <- c(constraintsUB, rep(mST_TZ5_up13.max, 24))
 constraintsUB <- c(constraintsUB, rep(mST_TZ5_up06.max, 24))
 constraintsUB <- c(constraintsUB, rep(mST_TZ5_kond.max, 24))
+
+#for (i in 1:24) {
+    #if (c_RDN[i] < 250) {
+        #for (j in 1:24) {
+            #constraintsDefault[(9 - 1) * 24 + j] = mST_TZ2_kond.min
+            #constraintsDefault[(14 - 1) * 24 + j] = mST_TZ5_kond.min
+        #}
+    #}
+#}
+
+#cat(constraintsDefault)
