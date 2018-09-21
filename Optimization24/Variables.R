@@ -47,7 +47,7 @@ printVariables = function(x) {
     var <- Variables(x)
 
     cat("           TZ1                 TZ2                      TZ5")
-    cat("\n           in   up25 up13 up06 in  up25 up13 up06 kond  in  up25  up13 up06 kond")
+    cat("\n           in  up25 up13 up06  in  up25 up13 up06 kond  in  up25 up13 up06 kond")
 
     for (i in 1:24) {
         cat("\nH: ", sprintf("%2.0f",i)[1] ," // ")
@@ -65,9 +65,13 @@ printVariables = function(x) {
         cat(sprintf("%3.0f",as.integer(round(var@mST_TZ5_up13 [i],digits=0)))[1], " ")
         cat(sprintf("%3.0f",as.integer(round(var@mST_TZ5_up06 [i],digits=0)))[1], " ")
         cat(sprintf("%3.0f",as.integer(round(var@mST_TZ5_kond [i],digits=0)))[1], " ")
-        cat(" // M: ", round((PEL_TZ1(x)[i] * c_RDN[i] + PEL_TZ2(x)[i] * c_RDN[i] + PEL_TZ5(x)[i] * c_RDN[i]) -
-           (KP_TZ1(x)[i] + KP_TZ2(x)[i] + KP_TZ5(x)[i]), digits=0))
-        cat(" // C: ", sprintf("%1.0f", round(c_RDN[i]), digits = 2),
+        cat("/ M:", round((PEL_TZ1(x)[i] * c_RDN[i] + PEL_TZ2(x)[i] * c_RDN[i] + PEL_TZ5(x)[i] * c_RDN[i]) -
+           (KP_TZ1(x)[i] + KP_TZ2(x)[i] + KP_TZ5(x)[i]), digits = 0))
+        cat("/ Z:", round(zap_par_06[i] + zap_par_13[i] + zap_par_25[i], digits = 0), "(",
+            sprintf("%2.0f", zap_par_25[i]),
+            sprintf("%3.0f", zap_par_13[i]),
+            sprintf("%3.0f", zap_par_06[i]), ")")
+        cat("/ C:", sprintf("%1.0f", round(c_RDN[i]), digits = 2),
             rep(" ", times = (c_RDN[i] %/% 10 - 20)),
             ifelse(round(var@mST_TZ2_kond[i], digits = 0) < 70 || round(var@mST_TZ5_kond[i], digits = 0) < 150, "#", "|"))
         #round(c_RDN[i], digits = 2)
