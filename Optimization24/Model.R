@@ -34,7 +34,7 @@ local_opts <- list("algorithm" = "NLOPT_LD_MMA",
 opts <- list("algorithm" = "NLOPT_LD_SLSQP",
          "check_derivatives" = FALSE, # poka¿ raport ze sprawdzania pochodnych
          "maxeval" = 995000,           # 1000
-         "maxtime" = 10,              # [s]
+         "maxtime" = 15,              # [s]
          "local_opts" = local_opts,
          "xtol_rel" = 1.0e-14,
          "ftol_rel" = 1.0e-07,
@@ -55,7 +55,7 @@ optim <- nloptr(x0 = constraintsDefault,
     lb = constraintsLB,
     ub = constraintsUB,
     eval_g_eq = equalities,
-    #eval_g_ineq = inequalities,
+    eval_g_ineq = inequalities,
     opts = opts)
 optim
 
@@ -63,22 +63,24 @@ printVariables(optim$solution,24)
 
 cat("\nConstraints:", (equalities(optim$solution))$constraints)
 cat("\nConstraints abs sum:", sum(abs((equalities(optim$solution))$constraints)))
+cat("\nConstraints:", (inequalities(optim$solution))$constraints)
 
 # zmiana dla jednej godziny
-x_test <- c(167, rep(0,times=23))
-x_test <- c(x_test, 20, rep(0,times=23))
-x_test <- c(x_test, 12, rep(0,times=23))
-x_test <- c(x_test, 135, rep(0,times=23))
-x_test <- c(x_test, 300, rep(0,times=23))
-x_test <- c(x_test, 26, rep(0,times=23))
-x_test <- c(x_test, 39, rep(0,times=23))
-x_test <- c(x_test, 205, rep(0,times=23))
-x_test <- c(x_test, 30, rep(0,times=23))
-x_test <- c(x_test, 352, rep(0,times=23))
-x_test <- c(x_test, 0, rep(0,times=23))
-x_test <- c(x_test, 43, rep(0,times=23))
-x_test <- c(x_test, 186, rep(0,times=23))
-x_test <- c(x_test, 123, rep(0,times=23))
-
+x_test <- c()
+x_test <- c(x_test, optim$solution[1+24*0] - 10, rep(0, times = 23)) #TZ1
+x_test <- c(x_test, optim$solution[1+24*1], rep(0,times=23))
+x_test <- c(x_test, optim$solution[1+24*2], rep(0,times=23))
+x_test <- c(x_test, optim$solution[1+24*3]-10, rep(0,times=23))
+x_test <- c(x_test, optim$solution[1+24*4], rep(0,times=23)) #TZ2
+x_test <- c(x_test, optim$solution[1+24*5]+10, rep(0,times=23))
+x_test <- c(x_test, optim$solution[1+24*6], rep(0,times=23))
+x_test <- c(x_test, optim$solution[1+24*7], rep(0,times=23))
+x_test <- c(x_test, optim$solution[1+24*8]-10, rep(0,times=23))
+x_test <- c(x_test, optim$solution[1+24*9], rep(0,times=23)) #TZ5
+x_test <- c(x_test, optim$solution[1+24*10], rep(0,times=23))
+x_test <- c(x_test, optim$solution[1+24*11]-10, rep(0,times=23))
+x_test <- c(x_test, optim$solution[1+24*12]+10, rep(0,times=23))
+x_test <- c(x_test, optim$solution[1+24*13], rep(0,times=23))
+cat(x_test)
 printVariables(x_test, 1)
 cat("\nConstraints:", (equalities(x_test))$constraints)

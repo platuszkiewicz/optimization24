@@ -29,12 +29,9 @@ mST_KS4 = c(352, 352, 352, 352, 349, 349, 349, 330, 373, 373, 373, 373, 373, 373
 
 prod_limit = 0 # maksymalna produkcja energii elektrycznej; 0 - jeœli brak ograniczenia
 
-steamCostTZ1 = c(80, 80, 80, 80, 80, 80, 80, 80,
-              80, 80, 80, 80, 80, 80, 80, 80,
-              80, 80, 80, 80, 80, 80, 80, 80)
-steamCostTZ2 = c(120, 120, 120, 120, 120, 120, 120, 120,
-              120, 120, 120, 120, 120, 120, 120, 120,
-              120, 120, 120, 120, 120, 120, 120, 120)
-steamCostTZ5 = c(100, 100, 100, 100, 100, 100, 100, 100,
-              100, 100, 100, 100, 100, 100, 100, 100,
-              100, 100, 100, 100, 100, 100, 100, 100)
+costTZ1 = 80-20 # PLN / t pary
+costTZ2 = 60-15 # PLN / t pary
+costTZ5 = 30-15 # PLN / t pary
+steamCostTZ1 = rep(costTZ1,times=24)
+steamCostTZ2 = rep(costTZ2,times=24)
+steamCostTZ5 = rep(costTZ5,times=24)
