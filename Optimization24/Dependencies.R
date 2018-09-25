@@ -9,7 +9,7 @@ equalities = function(x) {
 
     eq <- c()
 
-    EQ_LENGTH = 7
+    EQ_LENGTH = 8
     grad_d1 <- c()
     grad_d2 <- c()
     grad_d3 <- c()
@@ -17,6 +17,10 @@ equalities = function(x) {
     grad_d5 <- c()
     grad_d6 <- c()
     grad_d7 <- c()
+    grad_d8 <- c()
+
+    mST_25_KS4 <- F_mST_25_KS4()
+    grad_mST_25_KS4 <- G_mST_25_KS4()
 
     for (i in 1:24) {
         # bilanse masy w turbinach
@@ -39,6 +43,10 @@ equalities = function(x) {
         d7 = var@mST_TZ5_in[i] - mST_KS4[i]
         grad_d7[[i]] = c(0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0)
 
+        # TZ5 up25
+        d8 = var@mST_TZ5_up25[i] - mST_25_KS4[i]
+        grad_d8[[i]] = c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0) - grad_mST_25_KS4[[i]]
+
         eq[(24 * 0 + 0) + 1 * i] = d1
         eq[(24 * 1 + 0) + 1 * i] = d2
         eq[(24 * 2 + 0) + 1 * i] = d3
@@ -46,6 +54,7 @@ equalities = function(x) {
         eq[(24 * 4 + 0) + 1 * i] = d5
         eq[(24 * 5 + 0) + 1 * i] = d6
         eq[(24 * 6 + 0) + 1 * i] = d7
+        eq[(24 * 7 + 0) + 1 * i] = d8
     }
 
     GRADS <- list()
@@ -72,6 +81,7 @@ equalities = function(x) {
         GRADS[[4]] <- grad_d4[[h_r]] #c(0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0)
         GRADS[[5]] <- grad_d5[[h_r]] #c(0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0)
         GRADS[[7]] <- grad_d7[[h_r]] #c(0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0)
+        GRADS[[8]] <- grad_d8[[h_r]] #c(0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0)
 
         for (j in 1:(X_LENGTH * 24)) {
             h_x <- j %% 24
@@ -110,6 +120,9 @@ inequalities = function(x) {
     grad_d2 <- c()
     grad_d3 <- c()
 
+    mST_25_KS4 <- F_mST_25_KS4()
+    grad_mST_25_KS4 <- G_mST_25_KS4()
+
     # ograniczenia gdzie wyznaczam gradient dla jednej godziny
     for (i in 1:24) {
         # ograniczenia turbin
@@ -117,7 +130,7 @@ inequalities = function(x) {
         grad_d1[[i]] = c(0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
         d2 = var@mST_TZ2_up06[i] + var@mST_TZ2_kond[i] - 260
         grad_d2[[i]] = c(0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0)
-        d3 = 0.4 * zap_par_25[i] - var@mST_TZ1_up25[i]
+        d3 = 0.9 * (zap_par_25[i] - mST_25_KS4[i]) - var@mST_TZ1_up25[i]
         grad_d3[[i]] = c(0, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
 
         ieq[(24 * 0 + 0) + 1 * i] = d1
