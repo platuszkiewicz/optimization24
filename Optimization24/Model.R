@@ -20,12 +20,12 @@ fc1 = function(x) {
 
 grad_fc1 = function(x) {
     return(-((grad_PEL_TZ1(x) * c_RDN + grad_PEL_TZ2(x) * c_RDN + grad_PEL_TZ5(x) * c_RDN) -
-           grad_KP_TZ1(x) + grad_KP_TZ2(x) + grad_KP_TZ5(x)))
+           (grad_KP_TZ1(x) + grad_KP_TZ2(x) + grad_KP_TZ5(x))))
 }
 
 # optymalizacja
 local_opts <- list("algorithm" = "NLOPT_LD_MMA",
-"xtol_rel" = 1.0e-5)
+"xtol_rel" = 1.0e-10)
   #"xtol_rel" = 0.000001,
   #"ftol_rel" = 0.000001,
   #"ftol_abs" = 0.000001,
@@ -33,7 +33,7 @@ local_opts <- list("algorithm" = "NLOPT_LD_MMA",
 
 opts <- list("algorithm" = "NLOPT_LD_SLSQP",
          "check_derivatives" = FALSE, # poka¿ raport ze sprawdzania pochodnych
-         "maxeval" = 995000,           # 1000
+         "maxeval" = 1000,           # 1000
          "maxtime" = 15,              # [s]
          "local_opts" = local_opts,
          "xtol_rel" = 1.0e-14,
@@ -61,26 +61,40 @@ optim
 
 printVariables(optim$solution,24)
 
-cat("\nConstraints:", (equalities(optim$solution))$constraints)
-cat("\nConstraints abs sum:", sum(abs((equalities(optim$solution))$constraints)))
-cat("\nConstraints:", (inequalities(optim$solution))$constraints)
+cat("\nEqualities:", (equalities(optim$solution))$constraints)
+cat("\nEqualities abs sum:", sum(abs((equalities(optim$solution))$constraints)))
+cat("\nInequalities:", (inequalities(optim$solution))$constraints)
 
 # zmiana dla jednej godziny
 x_test <- c()
-x_test <- c(x_test, optim$solution[1+24*0] - 10, rep(0, times = 23)) #TZ1
+x_test <- c(x_test, optim$solution[1+24*0] - 3, rep(0, times = 23)) #TZ1
 x_test <- c(x_test, optim$solution[1+24*1], rep(0,times=23))
 x_test <- c(x_test, optim$solution[1+24*2], rep(0,times=23))
-x_test <- c(x_test, optim$solution[1+24*3]-10, rep(0,times=23))
+x_test <- c(x_test, optim$solution[1+24*3]-3, rep(0,times=23))
 x_test <- c(x_test, optim$solution[1+24*4], rep(0,times=23)) #TZ2
-x_test <- c(x_test, optim$solution[1+24*5]+10, rep(0,times=23))
+x_test <- c(x_test, optim$solution[1+24*5], rep(0,times=23))
 x_test <- c(x_test, optim$solution[1+24*6], rep(0,times=23))
-x_test <- c(x_test, optim$solution[1+24*7], rep(0,times=23))
-x_test <- c(x_test, optim$solution[1+24*8]-10, rep(0,times=23))
+x_test <- c(x_test, optim$solution[1+24*7]+3, rep(0,times=23))
+x_test <- c(x_test, optim$solution[1+24*8]-3, rep(0,times=23))
 x_test <- c(x_test, optim$solution[1+24*9], rep(0,times=23)) #TZ5
 x_test <- c(x_test, optim$solution[1+24*10], rep(0,times=23))
-x_test <- c(x_test, optim$solution[1+24*11]-10, rep(0,times=23))
-x_test <- c(x_test, optim$solution[1+24*12]+10, rep(0,times=23))
+x_test <- c(x_test, optim$solution[1+24*11], rep(0,times=23))
+x_test <- c(x_test, optim$solution[1+24*12], rep(0,times=23))
 x_test <- c(x_test, optim$solution[1+24*13], rep(0,times=23))
 cat(x_test)
 printVariables(x_test, 1)
-cat("\nConstraints:", (equalities(x_test))$constraints)
+
+
+a <- equalities(x_test)$constraints
+constraints_test <- c()
+
+    constraints_test <- c(constraints_test,a[1+24*0])
+    constraints_test <- c(constraints_test,a[1+24*1])
+    constraints_test <- c(constraints_test,a[1+24*2])
+    constraints_test <- c(constraints_test,a[1+24*3])
+    constraints_test <- c(constraints_test,a[1+24*4])
+    constraints_test <- c(constraints_test,a[1+24*5])
+    constraints_test <- c(constraints_test,a[1+24*6])
+
+cat("\nConstraints:", constraints_test)
+cat("\nConstraints abs sum:", sum(abs(constraints_test)))
