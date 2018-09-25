@@ -42,14 +42,14 @@ Variables = function(x) {
         mST_TZ5_kond = c(x[(24*13+1):(24+24*13)]))
 }
 
-printVariables = function(x) {
+printVariables = function(x,n) {
 
     var <- Variables(x)
 
-    cat("           TZ1                 TZ2                      TZ5")
+    cat("\n           TZ1                 TZ2                      TZ5")
     cat("\n           in  up25 up13 up06  in  up25 up13 up06 kond  in  up25 up13 up06 kond")
 
-    for (i in 1:24) {
+    for (i in 1:n) {
         cat("\nH: ", sprintf("%2.0f",i)[1] ," // ")
         cat(sprintf("%3.0f",as.integer(round(var@mST_TZ1_in   [i],digits=0)))[1], " ")
         cat(sprintf("%3.0f",as.integer(round(var@mST_TZ1_up25 [i],digits=0)))[1], " ")

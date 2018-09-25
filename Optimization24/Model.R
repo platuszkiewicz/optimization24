@@ -59,8 +59,26 @@ optim <- nloptr(x0 = constraintsDefault,
     opts = opts)
 optim
 
-printVariables(optim$solution)
+printVariables(optim$solution,24)
 
 cat("\nConstraints:", (equalities(optim$solution))$constraints)
 cat("\nConstraints abs sum:", sum(abs((equalities(optim$solution))$constraints)))
-cat("\n",KP_TZ1(optim$solution))
+
+# zmiana dla jednej godziny
+x_test <- c(167, rep(0,times=23))
+x_test <- c(x_test, 20, rep(0,times=23))
+x_test <- c(x_test, 12, rep(0,times=23))
+x_test <- c(x_test, 135, rep(0,times=23))
+x_test <- c(x_test, 300, rep(0,times=23))
+x_test <- c(x_test, 26, rep(0,times=23))
+x_test <- c(x_test, 39, rep(0,times=23))
+x_test <- c(x_test, 205, rep(0,times=23))
+x_test <- c(x_test, 30, rep(0,times=23))
+x_test <- c(x_test, 352, rep(0,times=23))
+x_test <- c(x_test, 0, rep(0,times=23))
+x_test <- c(x_test, 43, rep(0,times=23))
+x_test <- c(x_test, 186, rep(0,times=23))
+x_test <- c(x_test, 123, rep(0,times=23))
+
+printVariables(x_test, 1)
+cat("\nConstraints:", (equalities(x_test))$constraints)
