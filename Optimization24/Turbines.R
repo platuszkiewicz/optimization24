@@ -7,43 +7,31 @@ PEL_TZ1 = function(x) {
 
     PEL <- c()
     for (i in 1:24) {
-        D_I = var@mST_TZ1_in[i]
-        D_II = (var@mST_TZ1_in[i] - var@mST_TZ1_up25[i])
-        D_III = (var@mST_TZ1_in[i] - var@mST_TZ1_up25[i] - var@mST_TZ1_up13[i])
-
-        # Uwaga. Usuniecie max() gwarantuje zgodnosc pochodnej
-        PEL_I = c(0.0386 * D_I + 3.2269)
-        PEL_II = c(-0.0003419 * D_II * D_II + 0.1941 * D_II - 20.497)
-        PEL_III = c(0.000806 * D_III * D_III - 0.22816 * D_III + 22.80545)
-
-        PEL <- c(PEL, PEL_I + PEL_II + PEL_III)
+        PEL <- c(PEL, -6.072319 +
+        0.105464 * var@mST_TZ1_in[i] +
+        - 0.018970 * var@mST_TZ1_up25[i] +
+        0.012165 * var@mST_TZ1_up13[i] +
+        0.044843  * var@mST_TZ1_up06[i])
     }
-
-    # nowy model
-    #for (i in 1:24) {
-        ##PEL <- c(PEL, 0.1532344 * var@mST_TZ1_in[i] - 0.0682228 * var@mST_TZ1_up25[i] - 0.0353944 * var@mST_TZ1_up13[i] - 6.3862641)
-        #PEL <- c(PEL, 0.1532344 * var@mST_TZ1_in[i] - 0.0682228 * var@mST_TZ1_up25[i] - 0.035394 * var@mST_TZ1_up13[i])
-    #}
 
     return (PEL)
 }
 
 PEL_TZ2 = function(x) {
     var <- Variables(x)
+    pST_k <- 0.03
+    tWA_kin <- 20
 
     PEL <- c()
     for (i in 1:24) {
-        D_I = var@mST_TZ2_in[i]
-        D_II = var@mST_TZ2_in[i] - var@mST_TZ2_up25[i]
-        D_III = var@mST_TZ2_in[i] - var@mST_TZ2_up25[i] - var@mST_TZ2_up13[i]
-        D_IV = var@mST_TZ2_in[i] - var@mST_TZ2_up25[i] - var@mST_TZ2_up13[i] - var@mST_TZ2_up06[i]
-
-        PEL_I = c(0.0466 * D_I + 4.4824)
-        PEL_II = c(0.1015 * D_II - 10.569)
-        PEL_III = c(0.00005 * D_III * D_III - 0.0064 * D_III + 0.6309)
-        PEL_IV = c(0.1673 * D_IV - 2.1814)
-
-        PEL <- c(PEL, PEL_I + PEL_II + PEL_III+PEL_IV)
+        PEL <- c(PEL, -4.0995420 +
+        0.1201080 * var@mST_TZ2_in[i] +
+        - 0.0482238* var@mST_TZ2_up25[i] +
+        - 0.0052286* var@mST_TZ2_up13[i] +
+        0.0241272* var@mST_TZ2_up06[i] +
+        0.1811973* var@mST_TZ2_kond[i] +
+        9.5356414* pST_k +
+        - 0.0453943* tWA_kin))
     }
 
     return (PEL)

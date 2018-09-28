@@ -1,6 +1,6 @@
 F_mST_25_KS4 = function() {
-
     mST <- c()
+
     for (i in 1:24) {
         mST_i = 0
 

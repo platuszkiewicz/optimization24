@@ -17,19 +17,19 @@ mST_TZ1_up06.min = 135
 mST_TZ1_up06.max = 240
 
 # TZ - 2
-mST_TZ2_in.def = 280
+mST_TZ2_in.def = 300
 mST_TZ2_in.min = 105
 mST_TZ2_in.max = 300
-mST_TZ2_up25.def = 8
+mST_TZ2_up25.def = 0
 mST_TZ2_up25.min = 0
 mST_TZ2_up25.max = 27
-mST_TZ2_up13.def = 43
+mST_TZ2_up13.def = 50
 mST_TZ2_up13.min = 0
 mST_TZ2_up13.max = 100
-mST_TZ2_up06.def = 202
+mST_TZ2_up06.def = 180
 mST_TZ2_up06.min = 0
 mST_TZ2_up06.max = 205
-mST_TZ2_kond.def = 52
+mST_TZ2_kond.def = 70
 mST_TZ2_kond.min = 20
 mST_TZ2_kond.max = 70
 
@@ -53,20 +53,6 @@ mST_TZ5_kond.max = 150
 constraintsDefault = c()
 constraintsLB = c()
 constraintsUB = c()
-
-#for (i in 1:24) {
-    #constraintsDefault <- c(constraintsDefault, mST_TZ1_in.def, mST_TZ1_up25.def, mST_TZ1_up13.def, mST_TZ1_up06.def, 
-     #mST_TZ2_in.def, mST_TZ2_up25.def, mST_TZ2_up13.def, mST_TZ2_up06.def, mST_TZ2_kond.def,
-     #mST_TZ5_in.def, mST_TZ5_up25.def, mST_TZ5_up13.def, mST_TZ5_up06.def, mST_TZ5_kond.def)
-
-    #constraintsLB <- c(constraintsLB, mST_TZ1_in.min, mST_TZ1_up25.min, mST_TZ1_up13.min, mST_TZ1_up06.min,
-     #mST_TZ2_in.min, mST_TZ2_up25.min, mST_TZ2_up13.min, mST_TZ2_up06.min, mST_TZ2_kond.min,
-     #mST_TZ5_in.min, mST_TZ5_up25.min, mST_TZ5_up13.min, mST_TZ5_up06.min, mST_TZ5_kond.min)
-
-    #constraintsUB <- c(constraintsUB, mST_TZ1_in.max, mST_TZ1_up25.max, mST_TZ1_up13.max, mST_TZ1_up06.max, 
-     #mST_TZ2_in.max, mST_TZ2_up25.max, mST_TZ2_up13.max, mST_TZ2_up06.max, mST_TZ2_kond.max,
-     #mST_TZ5_in.max, mST_TZ5_up25.max, mST_TZ5_up13.max, mST_TZ5_up06.max, mST_TZ5_kond.max)
-#}
 
 constraintsDefault <- c(constraintsDefault, rep(mST_TZ1_in.def, 24))
 constraintsDefault <- c(constraintsDefault, rep(mST_TZ1_up25.def, 24))
@@ -112,14 +98,3 @@ constraintsUB <- c(constraintsUB, rep(mST_TZ5_up25.max, 24))
 constraintsUB <- c(constraintsUB, rep(mST_TZ5_up13.max, 24))
 constraintsUB <- c(constraintsUB, rep(mST_TZ5_up06.max, 24))
 constraintsUB <- c(constraintsUB, rep(mST_TZ5_kond.max, 24))
-
-#for (i in 1:24) {
-    #if (c_RDN[i] < 250) {
-        #for (j in 1:24) {
-            #constraintsDefault[(9 - 1) * 24 + j] = mST_TZ2_kond.min
-            #constraintsDefault[(14 - 1) * 24 + j] = mST_TZ5_kond.min
-        #}
-    #}
-#}
-
-#cat(constraintsDefault)
