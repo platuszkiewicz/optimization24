@@ -81,7 +81,7 @@ printVariables = function(x,n) {
             sprintf("%3.0f", zap_par_13[i]),
             sprintf("%3.0f", zap_par_06[i]), ")",
             sprintf("%3.0f", zap_el[i]))
-        cat(ifelse(PEL_TZ1(x)[i] + PEL_TZ2(x)[i] + PEL_TZ5(x)[i] > zap_el[i],"{O}","{Z}"))
+        cat("/", ifelse(PEL_TZ1(x)[i] + PEL_TZ2(x)[i] + PEL_TZ5(x)[i] > zap_el[i], "ODD", "ZAK"), sprintf("%3.0f", round(zap_el[i] - (PEL_TZ1(x)[i] + PEL_TZ2(x)[i] + PEL_TZ5(x)[i])),digits = 1 ))
         cat(" /C:", sprintf("%1.0f", round(c_RDN[i]), digits = 2),
             rep(" ", times = (c_RDN[i] %/% 10 - 7)),
             ifelse(round(var@mST_TZ2_kond[i], digits = 0) < 70 || round(var@mST_TZ5_kond[i], digits = 0) < 150, "#", "|"))

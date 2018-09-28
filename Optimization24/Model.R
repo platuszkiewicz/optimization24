@@ -40,7 +40,7 @@
              "check_derivatives" = FALSE,     # poka¿ raport ze sprawdzania pochodnych
              "check_derivatives_tol" = 1e-03, # dok³adnoœæ sprawdzania pochodnych
              "maxeval" = 1000,                # 1000
-             "maxtime" = 35,                  # [s]
+             "maxtime" = 25,                  # [s]
              "local_opts" = local_opts,
              "xtol_rel" = 1.0e-14,
              "ftol_rel" = 1.0e-07,
