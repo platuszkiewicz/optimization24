@@ -73,22 +73,22 @@
 
     # zmiana(test) dla jednej godziny
     cat("/n#   TEST   #")
-    h_test <- 10
+    h_test <- 2
     x_test <- c()
-    x_test <- c(x_test, rep(0,h_test-1), optim$solution[h_test+24*0],  rep(0,times=24-h_test)) #TZ1
+    x_test <- c(x_test, rep(0,h_test-1), optim$solution[h_test+24*0]-10,  rep(0,times=24-h_test)) #TZ1
     x_test <- c(x_test, rep(0,h_test-1), optim$solution[h_test+24*1],  rep(0,times=24-h_test))
-    x_test <- c(x_test, rep(0,h_test-1), optim$solution[h_test+24*2]+10,  rep(0,times=24-h_test))
+    x_test <- c(x_test, rep(0,h_test-1), optim$solution[h_test+24*2],  rep(0,times=24-h_test))
     x_test <- c(x_test, rep(0,h_test-1), optim$solution[h_test+24*3]-10,  rep(0,times=24-h_test))
     x_test <- c(x_test, rep(0,h_test-1), optim$solution[h_test+24*4],  rep(0,times=24-h_test)) #TZ2
     x_test <- c(x_test, rep(0,h_test-1), optim$solution[h_test+24*5],  rep(0,times=24-h_test))
-    x_test <- c(x_test, rep(0,h_test-1), optim$solution[h_test+24*6]-10,  rep(0,times=24-h_test))
-    x_test <- c(x_test, rep(0,h_test-1), optim$solution[h_test+24*7]+10,  rep(0,times=24-h_test))
+    x_test <- c(x_test, rep(0,h_test-1), optim$solution[h_test+24*6],  rep(0,times=24-h_test))
+    x_test <- c(x_test, rep(0,h_test-1), optim$solution[h_test+24*7],  rep(0,times=24-h_test))
     x_test <- c(x_test, rep(0,h_test-1), optim$solution[h_test+24*8],  rep(0,times=24-h_test))
     x_test <- c(x_test, rep(0,h_test-1), optim$solution[h_test+24*9],  rep(0,times=24-h_test)) #TZ5
     x_test <- c(x_test, rep(0,h_test-1), optim$solution[h_test+24*10], rep(0,times=24-h_test))
     x_test <- c(x_test, rep(0,h_test-1), optim$solution[h_test+24*11], rep(0,times=24-h_test))
-    x_test <- c(x_test, rep(0,h_test-1), optim$solution[h_test+24*12], rep(0,times=24-h_test))
-    x_test <- c(x_test, rep(0,h_test-1), optim$solution[h_test+24*13], rep(0,times=24-h_test))
+    x_test <- c(x_test, rep(0,h_test-1), optim$solution[h_test+24*12]+10, rep(0,times=24-h_test))
+    x_test <- c(x_test, rep(0,h_test-1), optim$solution[h_test+24*13]-10, rep(0,times=24-h_test))
 
     printVariables(x_test, h_test)
 
