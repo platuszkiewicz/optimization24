@@ -50,6 +50,11 @@ mST_TZ5_kond.def = 150
 mST_TZ5_kond.min = 50
 mST_TZ5_kond.max = 150
 
+# Swing
+mST_KS4_swing.def = 0
+mST_KS4_swing.min = ifelse(calcOptions.swing == TRUE,-50,0)
+mST_KS4_swing.max = ifelse(calcOptions.swing == TRUE, 50,0)
+
 constraintsDefault = c()
 constraintsLB = c()
 constraintsUB = c()
@@ -68,6 +73,7 @@ constraintsDefault <- c(constraintsDefault, rep(mST_TZ5_up25.def, 24))
 constraintsDefault <- c(constraintsDefault, rep(mST_TZ5_up13.def, 24))
 constraintsDefault <- c(constraintsDefault, rep(mST_TZ5_up06.def, 24))
 constraintsDefault <- c(constraintsDefault, rep(mST_TZ5_kond.def, 24))
+constraintsDefault <- c(constraintsDefault, rep(mST_KS4_swing.def, 24))
 
 constraintsLB <- c(constraintsLB, rep(mST_TZ1_in.min, 24))
 constraintsLB <- c(constraintsLB, rep(mST_TZ1_up25.min, 24))
@@ -83,6 +89,7 @@ constraintsLB <- c(constraintsLB, rep(mST_TZ5_up25.min, 24))
 constraintsLB <- c(constraintsLB, rep(mST_TZ5_up13.min, 24))
 constraintsLB <- c(constraintsLB, rep(mST_TZ5_up06.min, 24))
 constraintsLB <- c(constraintsLB, rep(mST_TZ5_kond.min, 24))
+constraintsLB <- c(constraintsLB, rep(mST_KS4_swing.min, 24))
 
 constraintsUB <- c(constraintsUB, rep(mST_TZ1_in.max, 24))
 constraintsUB <- c(constraintsUB, rep(mST_TZ1_up25.max, 24))
@@ -98,3 +105,4 @@ constraintsUB <- c(constraintsUB, rep(mST_TZ5_up25.max, 24))
 constraintsUB <- c(constraintsUB, rep(mST_TZ5_up13.max, 24))
 constraintsUB <- c(constraintsUB, rep(mST_TZ5_up06.max, 24))
 constraintsUB <- c(constraintsUB, rep(mST_TZ5_kond.max, 24))
+constraintsUB <- c(constraintsUB, rep(mST_KS4_swing.max, 24))

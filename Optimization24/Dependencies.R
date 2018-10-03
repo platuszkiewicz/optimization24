@@ -25,27 +25,27 @@ equalities = function(x) {
     for (i in 1:24) {
         # bilanse masy w turbinach
         d1 = var@mST_TZ1_in[i] - var@mST_TZ1_up25[i] - var@mST_TZ1_up13[i] - var@mST_TZ1_up06[i]
-        grad_d1[[i]] = c(1, -1, -1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+        grad_d1[[i]] = c(1, -1, -1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0)
         d2 = var@mST_TZ2_in[i] - var@mST_TZ2_up25[i] - var@mST_TZ2_up13[i] - var@mST_TZ2_up06[i] - var@mST_TZ2_kond[i]
-        grad_d2[[i]] = c(0, 0, 0, 0, 1, -1, -1, -1, -1, 0, 0, 0, 0, 0)
+        grad_d2[[i]] = c(0, 0, 0, 0, 1, -1, -1, -1, -1, 0, 0, 0, 0, 0,0)
         d6 = var@mST_TZ5_in[i] - var@mST_TZ5_up25[i] - var@mST_TZ5_up13[i] - var@mST_TZ5_up06[i] - var@mST_TZ5_kond[i]
-        grad_d6[[i]] = c(0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, -1, -1, -1)
+        grad_d6[[i]] = c(0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, -1, -1, -1,0)
 
         # zapotrzebowanie na parê (suma na kolektory)
         d3 = var@mST_TZ1_up25[i] + var@mST_TZ2_up25[i] + var@mST_TZ5_up25[i] - zap_par_25[i]
-        grad_d3[[i]] = c(0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0)
+        grad_d3[[i]] = c(0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0,0)
         d4 = var@mST_TZ1_up13[i] + var@mST_TZ2_up13[i] + var@mST_TZ5_up13[i] - zap_par_13[i]
-        grad_d4[[i]] = c(0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0)
+        grad_d4[[i]] = c(0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0,0)
         d5 = var@mST_TZ1_up06[i] + var@mST_TZ2_up06[i] + var@mST_TZ5_up06[i] - zap_par_06[i]
-        grad_d5[[i]] = c(0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0)
+        grad_d5[[i]] = c(0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0,0)
 
         # KS4
-        d7 = var@mST_TZ5_in[i] - mST_KS4[i]
-        grad_d7[[i]] = c(0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0)
+        d7 = var@mST_TZ5_in[i] - mST_KS4[i] - var@mST_KS4_swing[i]
+        grad_d7[[i]] = c(0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0,-1)
 
         # TZ5 up25
         d8 = var@mST_TZ5_up25[i] - mST_25_KS4[i]
-        grad_d8[[i]] = c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0) - grad_mST_25_KS4[[i]]
+        grad_d8[[i]] = c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0,0) - grad_mST_25_KS4[[i]]
 
         eq[(24 * 0 + 0) + 1 * i] = d1
         eq[(24 * 1 + 0) + 1 * i] = d2
@@ -56,6 +56,9 @@ equalities = function(x) {
         eq[(24 * 6 + 0) + 1 * i] = d7
         eq[(24 * 7 + 0) + 1 * i] = d8
     }
+
+    # swing
+    eq[length(eq) + 1] = sum(var@mST_KS4_swing) # suma mST_KS4_swing[1] + mST_KS4_swing[2] + ... = 0
 
     GRADS <- list()
 
@@ -103,6 +106,9 @@ equalities = function(x) {
         eqg <- rbind(eqg,w)
     }
 
+    ## swing: pochodna równania mST_KS4_swing[1] + mST_KS4_swing[2] + ... = 0 po ka¿dej z 24 zmiennych jest równa 1
+    eqg <- rbind(eqg, c(rep(0, times = (X_LENGTH - 1) * 24), rep(1, times = 24)))
+
     return(list("constraints" = eq,
         "jacobian" = eqg))
 }
@@ -127,11 +133,11 @@ inequalities = function(x) {
     for (i in 1:24) {
         # ograniczenia turbin
         d1 = var@mST_TZ1_up25[i] + var@mST_TZ1_up13[i] - 60
-        grad_d1[[i]] = c(0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+        grad_d1[[i]] = c(0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0)
         d2 = var@mST_TZ2_up06[i] + var@mST_TZ2_kond[i] - 260
-        grad_d2[[i]] = c(0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0)
+        grad_d2[[i]] = c(0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0,0)
         d3 = 0.9 * (zap_par_25[i] - mST_25_KS4[i]) - var@mST_TZ1_up25[i]
-        grad_d3[[i]] = c(0, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+        grad_d3[[i]] = c(0, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0)
 
         ieq[(24 * 0 + 0) + 1 * i] = d1
         ieq[(24 * 1 + 0) + 1 * i] = d2

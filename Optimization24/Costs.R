@@ -26,7 +26,7 @@ KP_TZ5 = function(x) {
     result <- c()
 
     for (i in 1:24) {
-        result <- c(result, steamCostTZ5[i] * var@mST_TZ5_in[i])
+        result <- c(result, steamCostTZ5[i] * mST_KS4[i]) #var@mST_TZ5_in[i])
     }
 
     return(result)
@@ -51,6 +51,7 @@ grad_KP_TZ1 = function(x) {
         grad[(24 * 11 + 0) + 1 * i] = 0
         grad[(24 * 12 + 0) + 1 * i] = 0
         grad[(24 * 13 + 0) + 1 * i] = 0
+        grad[(24 * 14 + 0) + 1 * i] = 0
     }
     
     return (grad)
@@ -75,6 +76,7 @@ grad_KP_TZ2 = function(x) {
         grad[(24 * 11 + 0) + 1 * i] = 0
         grad[(24 * 12 + 0) + 1 * i] = 0
         grad[(24 * 13 + 0) + 1 * i] = 0
+        grad[(24 * 14 + 0) + 1 * i] = 0
     }
     
     return (grad)
@@ -99,6 +101,7 @@ grad_KP_TZ5 = function(x) {
         grad[(24 * 11 + 0) + 1 * i] = 0
         grad[(24 * 12 + 0) + 1 * i] = 0
         grad[(24 * 13 + 0) + 1 * i] = 0
+        grad[(24 * 14 + 0) + 1 * i] = 0
     }
     
     return (grad)

@@ -77,6 +77,7 @@ grad_PEL_TZ1 = function(x) {
         grad[(24*11+0)+1*i] = 0
         grad[(24*12+0)+1*i] = 0
         grad[(24*13+0)+1*i] = 0
+        grad[(24*14+0)+1*i] = 0
     }
 
     return (grad)
@@ -101,6 +102,7 @@ grad_PEL_TZ2 = function(x) {
         grad[(24 * 11 + 0) + 1 * i] = 0
         grad[(24 * 12 + 0) + 1 * i] = 0
         grad[(24 * 13 + 0) + 1 * i] = 0
+        grad[(24 * 14 + 0) + 1 * i] = 0
     }
 
     return (grad)
@@ -124,6 +126,7 @@ grad_PEL_TZ5 = function(x) {
         grad[(24 * 11 + 0) + 1 * i] = - 0.123528
         grad[(24 * 12 + 0) + 1 * i] = - 0.074769
         grad[(24 * 13 + 0) + 1 * i] = 0.063627
+        grad[(24 * 14 + 0) + 1 * i] = 0
     }
 
     return (grad)
