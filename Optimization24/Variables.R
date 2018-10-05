@@ -2,7 +2,7 @@
 ### Variables - zmienne manipulacyjne
 #####################################
 
-X_LENGTH = 15
+X_LENGTH = 16
 
 # definicja (kolejne dopisywaæ na koñcu!)
 setClass("Variables",
@@ -11,6 +11,7 @@ setClass("Variables",
 	mST_TZ1_up25 = "vector",
     mST_TZ1_up13 = "vector",
     mST_TZ1_up06 = "vector",
+    mST_TZ1_wyd  = "vector",
     mST_TZ2_in   = "vector",
     mST_TZ2_up25 = "vector",
     mST_TZ2_up13 = "vector",
@@ -31,25 +32,26 @@ Variables = function(x) {
         mST_TZ1_up25 = c(x[(24*1+1 ):(24+24*1 )]),
         mST_TZ1_up13 = c(x[(24*2+1 ):(24+24*2 )]),
         mST_TZ1_up06 = c(x[(24*3+1 ):(24+24*3 )]),
-        mST_TZ2_in   = c(x[(24*4+1 ):(24+24*4 )]),
-        mST_TZ2_up25 = c(x[(24*5+1 ):(24+24*5 )]),
-        mST_TZ2_up13 = c(x[(24*6+1 ):(24+24*6 )]),
-        mST_TZ2_up06 = c(x[(24*7+1 ):(24+24*7 )]),
-        mST_TZ2_kond = c(x[(24*8+1 ):(24+24*8 )]),
-        mST_TZ5_in   = c(x[(24*9+1 ):(24+24*9 )]),
-        mST_TZ5_up25 = c(x[(24*10+1):(24+24*10)]),
-        mST_TZ5_up13 = c(x[(24*11+1):(24+24*11)]),
-        mST_TZ5_up06 = c(x[(24*12+1):(24+24*12)]),
-        mST_TZ5_kond = c(x[(24*13+1):(24+24*13)]),
-        mST_KS4_swing = c(x[(24*14+1):(24+24*14)]))
+        mST_TZ1_wyd  = c(x[(24*4+1 ):(24+24*4 )]),
+        mST_TZ2_in   = c(x[(24*5+1 ):(24+24*5 )]),
+        mST_TZ2_up25 = c(x[(24*6+1 ):(24+24*6 )]),
+        mST_TZ2_up13 = c(x[(24*7+1 ):(24+24*7 )]),
+        mST_TZ2_up06 = c(x[(24*8+1 ):(24+24*8 )]),
+        mST_TZ2_kond = c(x[(24*9+1 ):(24+24*9 )]),
+        mST_TZ5_in   = c(x[(24*10+1):(24+24*10)]),
+        mST_TZ5_up25 = c(x[(24*11+1):(24+24*11)]),
+        mST_TZ5_up13 = c(x[(24*12+1):(24+24*12)]),
+        mST_TZ5_up06 = c(x[(24*13+1):(24+24*13)]),
+        mST_TZ5_kond = c(x[(24*14+1):(24+24*14)]),
+        mST_KS4_swing= c(x[(24*15+1):(24+24*15)]))
 }
 
 printVariables = function(x,n,chart) {
 
     var <- Variables(x)
 
-    cat("\n           TZ1                 TZ2                      TZ5                     PEL")
-    cat("\n           in  up25 up13 up06  in  up25 up13 up06 kond  in  up25 up13 up06 kond")
+    cat("\n           TZ1                      TZ2                      TZ5                     PEL")
+    cat("\n           in  up25 up13 up06  wyd  in  up25 up13 up06 kond  in  up25 up13 up06 kond")
 
     i_start <- 1
     if (n != 24) {
@@ -62,6 +64,7 @@ printVariables = function(x,n,chart) {
         cat(sprintf("%3.0f",as.integer(round(var@mST_TZ1_up25 [i],digits=0)))[1], " ")
         cat(sprintf("%3.0f",as.integer(round(var@mST_TZ1_up13 [i],digits=0)))[1], " ")
         cat(sprintf("%3.0f",as.integer(round(var@mST_TZ1_up06 [i],digits=0)))[1], " ")
+        cat(sprintf("%3.0f",as.integer(round(var@mST_TZ1_wyd  [i],digits=0)))[1], " ")
         cat(sprintf("%3.0f",as.integer(round(var@mST_TZ2_in   [i],digits=0)))[1], " ")
         cat(sprintf("%3.0f",as.integer(round(var@mST_TZ2_up25 [i],digits=0)))[1], " ")
         cat(sprintf("%3.0f",as.integer(round(var@mST_TZ2_up13 [i],digits=0)))[1], " ")

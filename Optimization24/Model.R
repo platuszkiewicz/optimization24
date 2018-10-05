@@ -2,7 +2,8 @@
 library("nloptr")
 
 # ustawienia obliczeñ
-#calcOptions.swing <- FALSE
+calcOptions.swing <- TRUE
+calcOptions.wydmuch <- TRUE
 
 # modu³y modelu
 source("Input.R")         # dane wejœciowe
@@ -15,35 +16,30 @@ source("Auxiliaries.R")   # potrzeby w³asne
 
 #  #  #  #  #  #  #  #  #  #  #  #  #  #  #  #  #  #  #  #  #  #  #  #  #  #  #  #  #  #  #  #  
 
-# FC1 - maksymalizuj mar¿ê
+# FC1 - minimalizuj koszty rozumiane jako: koszty produkcji pary + koszty zakupu e.e. - przychód z sprzeda¿y e.e.
 
 fc1 = function(x) {
-    #return(-(sum(PEL_TZ1(x) * c_RDN + PEL_TZ2(x) * c_RDN + PEL_TZ5(x) * c_RDN) -
-    #sum(KP_TZ1(x) + KP_TZ2(x) + KP_TZ5(x))))
-
     return(sum(KE(x) + KP_TZ1(x) + KP_TZ2(x) + KP_TZ5(x)))
 }
 
 grad_fc1 = function(x) {
-    #return(-((grad_PEL_TZ1(x) * c_RDN + grad_PEL_TZ2(x) * c_RDN + grad_PEL_TZ5(x) * c_RDN) -
-    #(grad_KP_TZ1(x) + grad_KP_TZ2(x) + grad_KP_TZ5(x))))
-
     return((grad_KE(x) + grad_KP_TZ1(x) + grad_KP_TZ2(x) + grad_KP_TZ5(x)))
 }
 
 # optymalizacja
 local_opts <- list("algorithm" = "NLOPT_LD_MMA",
-"xtol_rel" = 1.0e-08,
+  "xtol_rel" = 1.0e-08,
   "xtol_rel" = 0.000001,
   "ftol_rel" = 0.000001,
   "ftol_abs" = 0.000001,
   "xtol_abs" = 0.000001) 
 
 opts <- list("algorithm" = "NLOPT_LD_SLSQP",
-         "check_derivatives" = FALSE,     # poka¿ raport ze sprawdzania pochodnych
+         "check_derivatives" = FALSE, # poka¿ raport ze sprawdzania pochodnych
+         #"check_derivatives_print " = "errors",
          "check_derivatives_tol" = 1e-03, # dok³adnoœæ sprawdzania pochodnych
          "maxeval" = 1000,                # 1000
-         "maxtime" = 35,                  # [s]
+         "maxtime" = 100,                  # [s]
          "local_opts" = local_opts,
          "xtol_rel" = 1.0e-14,
          "ftol_rel" = 1.0e-07,
@@ -78,25 +74,26 @@ cat("\nKoszt Pary:", sum(KP_TZ1(optim$solution) + KP_TZ2(optim$solution) + KP_TZ
 cat("\n Koszty - przychody (FC):", sum(KP_TZ1(optim$solution) + KP_TZ2(optim$solution) + KP_TZ5(optim$solution) + KE(optim$solution)))
 
 # zmiana(test) dla jednej godziny
-if (FALSE) {
+if (TRUE) {
         cat("\n#   TEST   #")
-        h_test <- 4
+        h_test <- 1
         x_test <- c()
-        x_test <- c(x_test, rep(0, h_test - 1), optim$solution[h_test + 24 * 0]+20, rep(0, times = 24 - h_test)) #TZ1
+        x_test <- c(x_test, rep(0, h_test - 1), optim$solution[h_test + 24 * 0], rep(0, times = 24 - h_test)) #TZ1
         x_test <- c(x_test, rep(0, h_test - 1), optim$solution[h_test + 24 * 1], rep(0, times = 24 - h_test))
         x_test <- c(x_test, rep(0, h_test - 1), optim$solution[h_test + 24 * 2], rep(0, times = 24 - h_test))
-        x_test <- c(x_test, rep(0, h_test - 1), optim$solution[h_test + 24 * 3]+20, rep(0, times = 24 - h_test))
-        x_test <- c(x_test, rep(0, h_test - 1), optim$solution[h_test + 24 * 4], rep(0, times = 24 - h_test)) #TZ2
-        x_test <- c(x_test, rep(0, h_test - 1), optim$solution[h_test + 24 * 5], rep(0, times = 24 - h_test))
+        x_test <- c(x_test, rep(0, h_test - 1), optim$solution[h_test + 24 * 3], rep(0, times = 24 - h_test))
+        x_test <- c(x_test, rep(0, h_test - 1), optim$solution[h_test + 24 * 4], rep(0, times = 24 - h_test)) 
+        x_test <- c(x_test, rep(0, h_test - 1), optim$solution[h_test + 24 * 5], rep(0, times = 24 - h_test)) #TZ2
         x_test <- c(x_test, rep(0, h_test - 1), optim$solution[h_test + 24 * 6], rep(0, times = 24 - h_test))
         x_test <- c(x_test, rep(0, h_test - 1), optim$solution[h_test + 24 * 7], rep(0, times = 24 - h_test))
-        x_test <- c(x_test, rep(0, h_test - 1), optim$solution[h_test + 24 * 8], rep(0, times = 24 - h_test))
-        x_test <- c(x_test, rep(0, h_test - 1), optim$solution[h_test + 24 * 9], rep(0, times = 24 - h_test)) #TZ5
-        x_test <- c(x_test, rep(0, h_test - 1), optim$solution[h_test + 24 * 10], rep(0, times = 24 - h_test))
-        x_test <- c(x_test, rep(0, h_test - 1), optim$solution[h_test + 24 * 11], rep(0, times = 24 - h_test))
-        x_test <- c(x_test, rep(0, h_test - 1), optim$solution[h_test + 24 * 12]-20, rep(0, times = 24 - h_test))
-        x_test <- c(x_test, rep(0, h_test - 1), optim$solution[h_test + 24 * 13]+20, rep(0, times = 24 - h_test))
-        x_test <- c(x_test, rep(0, h_test - 1), optim$solution[h_test + 24 * 14], rep(0, times = 24 - h_test)) # swing
+        x_test <- c(x_test, rep(0, h_test - 1), optim$solution[h_test + 24 * 8]+50, rep(0, times = 24 - h_test))
+        x_test <- c(x_test, rep(0, h_test - 1), optim$solution[h_test + 24 * 9]-50, rep(0, times = 24 - h_test)) 
+        x_test <- c(x_test, rep(0, h_test - 1), optim$solution[h_test + 24 * 10], rep(0, times = 24 - h_test)) #TZ5
+        x_test <- c(x_test, rep(0, h_test - 1), optim$solution[h_test + 24 * 11], rep(0, times = 24 - h_test)) 
+        x_test <- c(x_test, rep(0, h_test - 1), optim$solution[h_test + 24 * 12], rep(0, times = 24 - h_test))
+        x_test <- c(x_test, rep(0, h_test - 1), optim$solution[h_test + 24 * 13]-80, rep(0, times = 24 - h_test))
+        x_test <- c(x_test, rep(0, h_test - 1), optim$solution[h_test + 24 * 14]+80, rep(0, times = 24 - h_test)) 
+        x_test <- c(x_test, rep(0, h_test - 1), optim$solution[h_test + 24 * 15], rep(0, times = 24 - h_test)) # swing
 
         printVariables(x_test, h_test, FALSE)
 
@@ -115,4 +112,4 @@ if (FALSE) {
 
         cat("\nConstraints:", constraints_test)
         cat("\nConstraints abs sum:", sum(abs(constraints_test)))
-    }
+}

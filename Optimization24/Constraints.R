@@ -15,6 +15,10 @@ mST_TZ1_up13.max = 60
 mST_TZ1_up06.def = 190
 mST_TZ1_up06.min = 135
 mST_TZ1_up06.max = 240
+mST_TZ1_wyd.def = 0
+mST_TZ1_wyd.min = ifelse(calcOptions.wydmuch == TRUE, 0, 0)
+mST_TZ1_wyd.max = ifelse(calcOptions.wydmuch == TRUE, 100, 0)
+
 
 # TZ - 2
 mST_TZ2_in.def = 300
@@ -63,6 +67,7 @@ constraintsDefault <- c(constraintsDefault, rep(mST_TZ1_in.def, 24))
 constraintsDefault <- c(constraintsDefault, rep(mST_TZ1_up25.def, 24))
 constraintsDefault <- c(constraintsDefault, rep(mST_TZ1_up13.def, 24))
 constraintsDefault <- c(constraintsDefault, rep(mST_TZ1_up06.def, 24))
+constraintsDefault <- c(constraintsDefault, rep(mST_TZ1_wyd.def, 24))
 constraintsDefault <- c(constraintsDefault, rep(mST_TZ2_in.def, 24))
 constraintsDefault <- c(constraintsDefault, rep(mST_TZ2_up25.def, 24))
 constraintsDefault <- c(constraintsDefault, rep(mST_TZ2_up13.def, 24))
@@ -79,6 +84,7 @@ constraintsLB <- c(constraintsLB, rep(mST_TZ1_in.min, 24))
 constraintsLB <- c(constraintsLB, rep(mST_TZ1_up25.min, 24))
 constraintsLB <- c(constraintsLB, rep(mST_TZ1_up13.min, 24))
 constraintsLB <- c(constraintsLB, rep(mST_TZ1_up06.min, 24))
+constraintsLB <- c(constraintsLB, rep(mST_TZ1_wyd.min, 24))
 constraintsLB <- c(constraintsLB, rep(mST_TZ2_in.min, 24))
 constraintsLB <- c(constraintsLB, rep(mST_TZ2_up25.min, 24))
 constraintsLB <- c(constraintsLB, rep(mST_TZ2_up13.min, 24))
@@ -95,6 +101,7 @@ constraintsUB <- c(constraintsUB, rep(mST_TZ1_in.max, 24))
 constraintsUB <- c(constraintsUB, rep(mST_TZ1_up25.max, 24))
 constraintsUB <- c(constraintsUB, rep(mST_TZ1_up13.max, 24))
 constraintsUB <- c(constraintsUB, rep(mST_TZ1_up06.max, 24))
+constraintsUB <- c(constraintsUB, rep(mST_TZ1_wyd.max, 24))
 constraintsUB <- c(constraintsUB, rep(mST_TZ2_in.max, 24))
 constraintsUB <- c(constraintsUB, rep(mST_TZ2_up25.max, 24))
 constraintsUB <- c(constraintsUB, rep(mST_TZ2_up13.max, 24))
