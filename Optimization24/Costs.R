@@ -1,9 +1,18 @@
+# koszty paliwa
+cFU1_K7 = c(rep(250, times = 24))
+cFU2_K7 = c(rep(235, times = 24))
+
+cEN_BIO  = 4 # koszty œrodowiskowe [PLN / tona biomasy]
+cWA_DEMI = 3 # koszty wody DEMI    [PLN / tona wody]
+
 KP_TZ1 = function(x) {
     var <- Variables(x)
     result <- c()
 
     for (i in 1:24) {
-        result <- c(result, steamCostTZ1[i] * var@mST_TZ1_in[i] + 0.85 * steamCostTZ1[i] * var@mST_TZ1_wyd[i])
+        mFU1_K7[i] <<- (0.0227 * var@mST_TZ1_in[i]  + 3.7972) * 3.6 # t/h
+        mFU2_K7[i] <<- (0.0568 * var@mST_TZ1_in[i]  - 8.1435) * 3.6 # t/h
+        result <- c(result, cFU1_K7[i] * mFU1_K7[i] + cFU2_K7[i] * mFU2_K7[i] + cEN_BIO * (mFU1_K7[i] + mFU2_K7[i]) + cWA_DEMI * var@mST_TZ1_in[i])
     }
 
     return (result)
@@ -37,11 +46,11 @@ grad_KP_TZ1 = function(x) {
     grad <- c()
 
     for (i in 1:24) {
-        grad[(24 * 0 + 0) + 1 * i] = steamCostTZ1[i]
+        grad[(24 * 0 + 0) + 1 * i] = cFU1_K7[i] * (0.0227) * 3.6 + cFU2_K7[i] * (0.0568) * 3.6 + cEN_BIO * (0.0227 + 0.0568) * 3.6 + cWA_DEMI
         grad[(24 * 1 + 0) + 1 * i] = 0
         grad[(24 * 2 + 0) + 1 * i] = 0
         grad[(24 * 3 + 0) + 1 * i] = 0
-        grad[(24 * 4 + 0) + 1 * i] = 0.85 * steamCostTZ1[i]
+        grad[(24 * 4 + 0) + 1 * i] = 0
         grad[(24 * 5 + 0) + 1 * i] = 0
         grad[(24 * 6 + 0) + 1 * i] = 0
         grad[(24 * 7 + 0) + 1 * i] = 0
@@ -113,6 +122,12 @@ grad_KP_TZ5 = function(x) {
 ZAKUP_FACTOR <- 1.00
 ODDANIE_FACTOR <- 0.98
 
+cEE_DISTR <- 30  # PLN / MWh
+cCER_GREEN <- 65 # PLN / MWh
+
+#cEE_DISTR <- 0  # PLN / MWh
+#cCER_GREEN <- 0 # PLN / MWh
+
 KE = function(x) {
     var <- Variables(x)
     result <- c()
@@ -122,8 +137,8 @@ KE = function(x) {
         PELzakup <- 0 
         PELoddanie <- 0
 
-        cEEzakup <- (c_RDN[i] * ZAKUP_FACTOR)
-        cEEoddanie <- (c_RDN[i] * ODDANIE_FACTOR)
+        cEEzakup <- (c_RDN[i] * ZAKUP_FACTOR) + cEE_DISTR
+        cEEoddanie <- (c_RDN[i] * ODDANIE_FACTOR) + cCER_GREEN
 
         if (PELec[i] > zap_el[i]) { # oddanie
             PELoddanie = PELec[i] - zap_el[i]
@@ -156,8 +171,8 @@ grad_KE = function(x) {
             v <- (v - 1)
         }
 
-        cEEzakup <- c_RDN[h] * ZAKUP_FACTOR
-        cEEoddanie <- c_RDN[h] * ODDANIE_FACTOR
+        cEEzakup <- c_RDN[h] * ZAKUP_FACTOR + cEE_DISTR
+        cEEoddanie <- c_RDN[h] * ODDANIE_FACTOR + cCER_GREEN
 
         if (PELec[h] > zap_el[h]) {
             grad[i] <- -(cEEoddanie * grad[i])

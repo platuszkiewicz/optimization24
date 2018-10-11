@@ -113,3 +113,19 @@ constraintsUB <- c(constraintsUB, rep(mST_TZ5_up13.max, 24))
 constraintsUB <- c(constraintsUB, rep(mST_TZ5_up06.max, 24))
 constraintsUB <- c(constraintsUB, rep(mST_TZ5_kond.max, 24))
 constraintsUB <- c(constraintsUB, rep(mST_KS4_swing.max, 24))
+
+# dodatkowe ograniczenia na swing zwi¹zane z przebiegiem ceny na RDN
+if (calcOptions.swing == TRUE) {
+    swingVariableIndex = 16
+    for (i in 1:24) {
+        if (c_RDN[i] < 0.93 * mean(c_RDN)) {
+            constraintsLB[((swingVariableIndex - 1) * 24) + i] = -50
+            constraintsUB[((swingVariableIndex - 1) * 24) + i] = -20
+            constraintsDefault[((swingVariableIndex - 1) * 24) + i] = -50
+        } else {
+            constraintsLB[((swingVariableIndex - 1) * 24) + i] = 20
+            constraintsUB[((swingVariableIndex - 1) * 24) + i] = 50
+            constraintsDefault[((swingVariableIndex - 1) * 24) + i] = 50
+        }
+    }
+}

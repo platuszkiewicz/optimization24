@@ -2,10 +2,11 @@
 ### Dependencies - zale¿noœci które musz¹ byæ spe³nione
 #######################################################
 
+# -----------------------------------------------------
 # Ograniczenia - równania f(x) = 0
+# -----------------------------------------------------
 equalities = function(x) {
-    # x - wektor zmiennych manipulacyjnych
-    var <- Variables(x)
+    var <- Variables(x) # x - wektor zmiennych manipulacyjnych
 
     eq <- c()
 
@@ -57,7 +58,7 @@ equalities = function(x) {
         eq[(24 * 7 + 0) + 1 * i] = d8
     }
 
-    # swing
+    # swing: jedno równanie dopisane na koñcu - na pozycji (EQ_LENGTH * 24) + 1
     eq[length(eq) + 1] = sum(var@mST_KS4_swing) # suma mST_KS4_swing[1] + mST_KS4_swing[2] + ... = 0
 
     GRADS <- list()
@@ -68,7 +69,7 @@ equalities = function(x) {
         w <- c()
 
         r <- (i %/% 24) + 1
-        if (i%%24 == 0) { # if (h_x == 24) {
+        if (i%%24 == 0) {
             r <- r - 1
         }
 
@@ -142,6 +143,13 @@ inequalities = function(x) {
         d4 = (var@mST_TZ1_up06[i] + var@mST_TZ1_wyd[i]) - 240
         grad_d4[[i]] = c(0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
 
+        if (i == 1 || i == 24) {
+            d5 = var@mST_TZ1_in[i] - mST_TZ1_in.max
+        } else {
+            d5 = var@mST_TZ1_in[i] - var@mST_TZ1_in[i - 1] - 35
+
+        }
+
         ieq[(24 * 0 + 0) + 1 * i] = d1
         ieq[(24 * 1 + 0) + 1 * i] = d2
         ieq[(24 * 2 + 0) + 1 * i] = d3
@@ -165,9 +173,9 @@ inequalities = function(x) {
             h_r = 24
         }
 
-        GRADS[[1]] <- grad_d1[[h_r]] #c(0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
-        GRADS[[2]] <- grad_d2[[h_r]] #c(0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0)
-        GRADS[[3]] <- grad_d3[[h_r]] #c(0, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+        GRADS[[1]] <- grad_d1[[h_r]]
+        GRADS[[2]] <- grad_d2[[h_r]]
+        GRADS[[3]] <- grad_d3[[h_r]]
         GRADS[[4]] <- grad_d4[[h_r]]
 
         for (j in 1:(X_LENGTH * 24)) {
@@ -186,6 +194,95 @@ inequalities = function(x) {
             } else {
                 w <- c(w, 0)
             }
+        }
+        ieqg <- rbind(ieqg, w)
+    }
+
+    # ograniczenia gdzie wyznaczam gradient pomiêdzy godzinami
+
+    IEQ_LENGTH_2 = 2
+    grad_d5_Previous <- c()
+    grad_d5_Current <- c()
+    grad_d5_Next <- c()
+    grad_d6_Previous <- c()
+    grad_d6_Current <- c()
+    grad_d6_Next <- c()
+
+    for (i in 1:24) {
+        # dopuszczalna prêdkoœæ zmiany obci¹¿enia K7
+        if (i == 1) {
+            d5 = var@mST_TZ1_in[i] - mST_TZ1_in.max
+            grad_d5_Previous[[i]] = c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+            grad_d5_Current[[i]] = c(1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+            grad_d5_Next[[i]] = c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+        } else {
+            d5 = var@mST_TZ1_in[i] - var@mST_TZ1_in[i - 1] - 30
+            grad_d5_Previous[[i]] = c(-1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+            grad_d5_Current[[i]] = c(1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+            grad_d5_Next[[i]] = c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+        }
+        if (i == 1) {
+            d6 = var@mST_TZ1_in[i] - mST_TZ1_in.max
+            grad_d6_Previous[[i]] = c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+            grad_d6_Current[[i]] = c(1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+            grad_d6_Next[[i]] = c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+        } else {
+            d6 = - var@mST_TZ1_in[i] + var@mST_TZ1_in[i - 1] - 30
+            grad_d6_Previous[[i]] = c(1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+            grad_d6_Current[[i]] = c(-1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+            grad_d6_Next[[i]] = c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+        }
+
+        ieq[(24 * (IEQ_LENGTH + 0)) + 1 * i] = d5
+        ieq[(24 * (IEQ_LENGTH + 1)) + 1 * i] = d6
+    }
+
+    GRADS_PREVIOUS <- list()
+    GRADS_CURRENT <- list()
+    GRADS_NEXT <- list()
+
+    r <- c()
+    for (i in 1:(IEQ_LENGTH_2*24)) {
+        w <- c()
+
+        r <- (i %/% 24) + 1
+        if (i %% 24 == 0) {
+            r <- r - 1
+        }
+
+        h_r <- (i %% 24)
+        if (h_r == 0) {
+            h_r = 24
+        }
+
+        GRADS_PREVIOUS[[1]] <- grad_d5_Previous[[h_r]]
+        GRADS_CURRENT[[1]] <- grad_d5_Current[[h_r]]
+        GRADS_NEXT[[1]] <- grad_d5_Next[[h_r]]
+        GRADS_PREVIOUS[[2]] <- grad_d6_Previous[[h_r]]
+        GRADS_CURRENT[[2]] <- grad_d6_Current[[h_r]]
+        GRADS_NEXT[[2]] <- grad_d6_Next[[h_r]]
+
+        for (j in 1:(X_LENGTH * 24)) {
+            h_x <- j %% 24
+            if (h_x == 0) {
+                h_x = 24
+            }
+
+            v_x <- (j %/% 24) + 1
+            if (h_x == 24) {
+                v_x <- v_x - 1
+            }
+
+            if (h_x == (h_r - 1)) {
+                w <- c(w, GRADS_PREVIOUS[[r]][v_x])
+            } else if (h_x == h_r) {
+                w <- c(w, GRADS_CURRENT[[r]][v_x])
+            } else if (h_x == h_r + 1) {
+                w <- c(w, GRADS_NEXT[[r]][v_x])
+            } else {
+                w <- c(w, 0)
+            }
+
         }
         ieqg <- rbind(ieqg, w)
     }

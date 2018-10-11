@@ -90,6 +90,7 @@ printVariables = function(x,n,chart) {
             #rep(" ", times = (c_RDN[i] %/% 10 - 7)),
             #ifelse(round(var@mST_TZ2_kond[i], digits = 0) < 70 || round(var@mST_TZ5_kond[i], digits = 0) < 150, "#", "|"))
         #round(c_RDN[i], digits = 2)
+        cat(" PAL: ", round(mFU1_K7[i],digits = 0), " ", round(mFU2_K7[i],digits = 0), " ", round(mFU1_K7[i] / (mFU1_K7[i] +  mFU2_K7[i]), digits = 2))
     }
 
 
@@ -148,7 +149,8 @@ printVariables = function(x,n,chart) {
         mST_KS4 <- mST_KS4
         balance <- zap_el - (PEL_TZ1(x) + PEL_TZ2(x) + PEL_TZ5(x))
         time <- c(1:24)
-        dat <- data.frame(time, swing, c_RDN, mST_TZ5_in, mST_TZ5_kond, balance)
+        steam <- zap_par_06 + zap_par_13 + zap_par_25
+        dat <- data.frame(time, swing, c_RDN, mST_TZ5_in, mST_TZ5_kond, balance, steam)
         dat.m <- melt(dat, "time")
         plot1 <- ggplot(dat.m, aes(time, value, colour = variable)) + geom_line() +
         facet_wrap(~variable, ncol = 1, scales = "free_y") + theme(legend.position = "none")
@@ -172,5 +174,23 @@ printVariables = function(x,n,chart) {
                 colour = "Steam flow [t/h]")
         plot2 <- plot2 + theme(legend.position = c(0.8, 0.9))
         plot(plot2)
+
+        # PLOT 3
+        mST_TZ1_in <- var@mST_TZ1_in
+        plot3 <- ggplot(dat, aes(x = time))
+        plot3 <- plot3 + geom_line(aes(y = mST_TZ1_in, colour = "mST_TZ1_in"))
+        plot3 <- plot3 + geom_line(aes(y = mFU1_K7 * 5, colour = "mFU1_K7"))
+        plot3 <- plot3 + geom_line(aes(y = mFU2_K7 * 5, colour = "mFU2_K7"))
+        plot3 <- plot3 + scale_y_continuous(sec.axis = sec_axis(~. /5 , name = "Strumieñ paliwa [kg/s]"))
+        plot3 <- plot3 + scale_colour_manual(values = c("blue", "red", "dark green"))
+        plot3 <- plot3 + labs(y = "K7",
+                x = "Time",
+                colour = "K7")
+        plot3 <- plot3 + theme(legend.position = c(0.8, 0.9))
+        plot(plot3)
     }
 }
+
+# Inne zmienne opisuj¹ce stan uk³adu
+mFU1_K7 <- c(rep(0,times=24))
+mFU2_K7 <- c(rep(0, times = 24))
