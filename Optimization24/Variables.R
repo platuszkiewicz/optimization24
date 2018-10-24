@@ -2,7 +2,7 @@
 ### Variables - zmienne manipulacyjne
 #####################################
 
-X_LENGTH = 16
+X_LENGTH = 21
 
 # definicja (kolejne dopisywaæ na koñcu!)
 setClass("Variables",
@@ -17,6 +17,11 @@ setClass("Variables",
     mST_TZ2_up13 = "vector",
     mST_TZ2_up06 = "vector",
     mST_TZ2_kond = "vector",
+    mST_TZ4_in   = "vector",
+    mST_TZ4_up25 = "vector",
+    mST_TZ4_up13 = "vector",
+    mST_TZ4_up06 = "vector",
+    mST_TZ4_wyd  = "vector",
     mST_TZ5_in   = "vector",
     mST_TZ5_up25 = "vector",
     mST_TZ5_up13 = "vector",
@@ -38,20 +43,25 @@ Variables = function(x) {
         mST_TZ2_up13 = c(x[(24*7+1 ):(24+24*7 )]),
         mST_TZ2_up06 = c(x[(24*8+1 ):(24+24*8 )]),
         mST_TZ2_kond = c(x[(24*9+1 ):(24+24*9 )]),
-        mST_TZ5_in   = c(x[(24*10+1):(24+24*10)]),
-        mST_TZ5_up25 = c(x[(24*11+1):(24+24*11)]),
-        mST_TZ5_up13 = c(x[(24*12+1):(24+24*12)]),
-        mST_TZ5_up06 = c(x[(24*13+1):(24+24*13)]),
-        mST_TZ5_kond = c(x[(24*14+1):(24+24*14)]),
-        mST_KS4_swing= c(x[(24*15+1):(24+24*15)]))
+        mST_TZ4_in = c(x[(24*10+1 ):(24+24*10 )]),
+        mST_TZ4_up25 = c(x[(24*11+1 ):(24+24*11 )]),
+        mST_TZ4_up13 = c(x[(24*12+1 ):(24+24*12 )]),
+        mST_TZ4_up06 = c(x[(24*13+1 ):(24+24*13 )]),
+        mST_TZ4_wyd = c(x[(24*14+1 ):(24+24*14 )]),
+        mST_TZ5_in   = c(x[(24*15+1):(24+24*15)]),
+        mST_TZ5_up25 = c(x[(24*16+1):(24+24*16)]),
+        mST_TZ5_up13 = c(x[(24*17+1):(24+24*17)]),
+        mST_TZ5_up06 = c(x[(24*18+1):(24+24*18)]),
+        mST_TZ5_kond = c(x[(24*19+1):(24+24*19)]),
+        mST_KS4_swing= c(x[(24*20+1):(24+24*20)]))
 }
 
 printVariables = function(x,n,chart) {
 
     var <- Variables(x)
 
-    cat("\n           TZ1                      TZ2                      TZ5                     PEL")
-    cat("\n           in  up25 up13 up06  wyd  in  up25 up13 up06 kond  in  up25 up13 up06 kond")
+    cat("\n           TZ1                      TZ2                      TZ4                      TZ5                     PEL")
+    cat("\n           in  up25 up13 up06  wyd  in  up25 up13 up06 kond  in  up25 up13 up06  wyd  in  up25 up13 up06 kond")
 
     i_start <- 1
     if (n != 24) {
@@ -70,15 +80,20 @@ printVariables = function(x,n,chart) {
         cat(sprintf("%3.0f",as.integer(round(var@mST_TZ2_up13 [i],digits=0)))[1], " ")
         cat(sprintf("%3.0f",as.integer(round(var@mST_TZ2_up06 [i],digits=0)))[1], " ")
         cat(sprintf("%3.0f",as.integer(round(var@mST_TZ2_kond [i],digits=0)))[1], " ")
+        cat(sprintf("%3.0f",as.integer(round(var@mST_TZ4_in   [i],digits=0)))[1], " ")
+        cat(sprintf("%3.0f",as.integer(round(var@mST_TZ4_up25 [i],digits=0)))[1], " ")
+        cat(sprintf("%3.0f",as.integer(round(var@mST_TZ4_up13 [i],digits=0)))[1], " ")
+        cat(sprintf("%3.0f",as.integer(round(var@mST_TZ4_up06 [i],digits=0)))[1], " ")
+        cat(sprintf("%3.0f",as.integer(round(var@mST_TZ4_wyd  [i],digits=0)))[1], " ")
         cat(sprintf("%3.0f",as.integer(round(var@mST_TZ5_in   [i],digits=0)))[1], " ")
         cat(sprintf("%3.0f",as.integer(round(var@mST_TZ5_up25 [i],digits=0)))[1], " ")
         cat(sprintf("%3.0f",as.integer(round(var@mST_TZ5_up13 [i],digits=0)))[1], " ")
         cat(sprintf("%3.0f",as.integer(round(var@mST_TZ5_up06 [i],digits=0)))[1], " ")
-        cat(sprintf("%3.0f", as.integer(round(var@mST_TZ5_kond[i], digits = 0)))[1], " ")
+        cat(sprintf("%3.0f", as.integer(round(var@mST_TZ5_kond[i],digits=0)))[1], " ")
         cat(sprintf("%3.0f", as.integer(round(PEL_TZ1(x)[i]+PEL_TZ2(x)[i]+PEL_TZ5(x)[i], digits = 0)))[1], " ")
-        cat("/M(-FC):", sprintf("%6.0f",-round(KE(x)[i] + KP_TZ1(x)[i] + KP_TZ2(x)[i] + KP_TZ5(x)[i], digits = 0)))
+        cat("/M(-FC):", sprintf("%6.0f", - round(KE(x)[i] + KP_TZ1(x)[i] + KP_TZ2(x)[i] + KP_TZ4(x)[i] + KP_TZ5(x)[i], digits = 0)))
         cat(" /KE:", sprintf("%5.0f",round(KE(x)[i], digits = 0)))
-        cat(" /KP:", sprintf("%5.0f",round(KP_TZ1(x)[i] + KP_TZ2(x)[i] + KP_TZ5(x)[i], digits = 0)))
+        cat(" /KP:", sprintf("%5.0f", round(KP_TZ1(x)[i] + KP_TZ2(x)[i] + KP_TZ4(x)[i] + KP_TZ5(x)[i], digits = 0)))
         cat(" /Z:", round(zap_par_06[i] + zap_par_13[i] + zap_par_25[i], digits = 0), "(",
             sprintf("%2.0f", zap_par_25[i]),
             sprintf("%3.0f", zap_par_13[i]),

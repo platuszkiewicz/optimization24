@@ -2,6 +2,29 @@
 ### Input - wielkoœci wejœciowe
 ###############################
 
+configEC = new("Configuration",
+    K7         = c(rep(TRUE, times = 24)),
+    SRS_TZ1    = c(rep(FALSE, times = 24)),
+    TZ1        = c(rep(TRUE, times = 24)),
+    ###
+    K1         = c(rep(TRUE, times = 24)),
+    K6         = c(rep(TRUE, times = 24)),
+    TZ2        = c(rep(TRUE, times = 24)),
+    SRS_TZ2_06 = c(rep(FALSE, times = 24)),
+    SRS_TZ2_13 = c(rep(FALSE, times = 24)),
+    ###
+    K4         = c(rep(FALSE, times = 24)),
+    K5         = c(rep(FALSE, times = 24)),
+    TZ4        = c(rep(FALSE, times = 24)),
+    SRS_TZ4    = c(rep(FALSE, times = 24)),
+    ###
+    KS4        = c(rep(TRUE, times = 24)),
+    TZ5        = c(rep(TRUE, times = 24)),
+    SRS_TZ5_06 = c(rep(FALSE, times = 24)),
+    SRS_TZ5_13 = c(rep(FALSE, times = 24)),
+    SRS_TZ5_25 = c(rep(FALSE, times = 24))
+)
+
 # Zapotrzebowanie - Zestaw 1
 zap_par_25 = c(46, 46, 46, 46, 46, 46, 47, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 45, 45, 45)
 zap_par_13 = c(94, 94, 94, 94, 94, 94, 97, 90, 98, 98, 98, 98, 98, 98, 101, 103, 98, 97, 97, 97, 97, 88, 91, 92)
@@ -78,7 +101,11 @@ c_RDN = c(142.66, 143.48, 140.37, 136.22, 136.65, 145.79, 170.99, 224.14,
 
 costTZ1 = 25  # PLN / t pary
 costTZ2 = 20  # PLN / t pary
+costTZ4 = 70  # PLN / t pary
 costTZ5 = 15  # PLN / t pary
 steamCostTZ1 = rep(costTZ1,times=24)
 steamCostTZ2 = rep(costTZ2,times=24)
-steamCostTZ5 = rep(costTZ5,times=24)
+steamCostTZ4 = rep(costTZ4,times=24)
+steamCostTZ5 = rep(costTZ5, times = 24)
+c_RDN[18] = c_RDN[18] + 100
+c_RDN[19] = c_RDN[18] + 100

@@ -5,9 +5,10 @@ library("nloptr")
 calcOptions.swing <- TRUE # TODO: nie proponuj swingu kiedy np. sd(C_RDN) < 50
 calcOptions.wydmuch <- TRUE
 
-start.time <- Sys.time()
+start.time <- proc.time()[[3]]
 
 # modu³y modelu
+source("Configuration.R") # konfiguracja EC
 source("Input.R")         # dane wejœciowe
 source("Variables.R")     # zmienne manipulacyjne
 source("Constraints.R")   # ograniczenia zmiennych manipulacyjnych
@@ -21,11 +22,11 @@ source("Auxiliaries.R")   # potrzeby w³asne
 # FC1 - minimalizuj koszty rozumiane jako: koszty produkcji pary + koszty zakupu e.e. - przychód z sprzeda¿y e.e.
 
 fc1 = function(x) {
-    return(sum(KE(x) + KP_TZ1(x) + KP_TZ2(x) + KP_TZ5(x)))
+    return(sum(KE(x) + KP_TZ1(x) + KP_TZ2(x) + KP_TZ4(x) + KP_TZ5(x)))
 }
 
 grad_fc1 = function(x) {
-    return((grad_KE(x) + grad_KP_TZ1(x) + grad_KP_TZ2(x) + grad_KP_TZ5(x)))
+    return((grad_KE(x) + grad_KP_TZ1(x) + grad_KP_TZ2(x) + grad_KP_TZ4(x) + grad_KP_TZ5(x)))
 }
 
 # optymalizacja
@@ -40,8 +41,8 @@ opts <- list("algorithm" = "NLOPT_LD_SLSQP",
          "check_derivatives" = FALSE, # poka¿ raport ze sprawdzania pochodnych
          #"check_derivatives_print " = "errors",
          "check_derivatives_tol" = 1e-03, # dok³adnoœæ sprawdzania pochodnych
-         "maxeval" = 1000,                # 1000
-         "maxtime" = 25,                  # [s]
+         "maxeval" = 30,                  # 1000
+         "maxtime" = 140,                  # [s]
          "local_opts" = local_opts,
          "xtol_rel" = 1.0e-14,
          "ftol_rel" = 1.0e-07,
@@ -66,8 +67,8 @@ optim <- nloptr(x0 = constraintsDefault,
     opts = opts)
 optim
 
-end.time <- Sys.time()
-cat("\n ####### Calculation time: " , round(end.time - start.time, digits = 1), " seconds ##########")
+end.time <- proc.time()[[3]]
+cat("\n ####### Calculation time: ", round(end.time - start.time, digits = 1), " seconds ##########")
 
 printVariables(optim$solution,24, TRUE)
 
@@ -75,30 +76,35 @@ cat("\nEqualities:", (equalities(optim$solution))$constraints)
 cat("\nEqualities abs sum:", sum(abs((equalities(optim$solution))$constraints)))
 cat("\nInequalities:", (inequalities(optim$solution))$constraints)
 cat("\nKoszt Energii:", sum(KE(optim$solution)))
-cat("\nKoszt Pary:", sum(KP_TZ1(optim$solution) + KP_TZ2(optim$solution) + KP_TZ5(optim$solution)))
-cat("\n Koszty - przychody (FC):", sum(KP_TZ1(optim$solution) + KP_TZ2(optim$solution) + KP_TZ5(optim$solution) + KE(optim$solution)))
+cat("\nKoszt Pary:", sum(KP_TZ1(optim$solution) + KP_TZ2(optim$solution) + KP_TZ4(optim$solution) + KP_TZ5(optim$solution)))
+cat("\n Koszty - przychody (FC):", sum(KP_TZ1(optim$solution) + KP_TZ2(optim$solution) + KP_TZ4(optim$solution) + KP_TZ5(optim$solution) + KE(optim$solution)))
 
 # zmiana(test) dla jednej godziny
 if (TRUE) {
         cat("\n#   TEST   #")
-        h_test <- 18
+        h_test <- 16
         x_test <- c()
-        x_test <- c(x_test, rep(0, h_test - 1), optim$solution[h_test + 24 * 0]+10, rep(0, times = 24 - h_test)) #TZ1
+        x_test <- c(x_test, rep(0, h_test - 1), optim$solution[h_test + 24 * 0], rep(0, times = 24 - h_test)) #TZ1
         x_test <- c(x_test, rep(0, h_test - 1), optim$solution[h_test + 24 * 1], rep(0, times = 24 - h_test))
         x_test <- c(x_test, rep(0, h_test - 1), optim$solution[h_test + 24 * 2], rep(0, times = 24 - h_test))
         x_test <- c(x_test, rep(0, h_test - 1), optim$solution[h_test + 24 * 3], rep(0, times = 24 - h_test))
-        x_test <- c(x_test, rep(0, h_test - 1), optim$solution[h_test + 24 * 4]+10, rep(0, times = 24 - h_test)) 
+        x_test <- c(x_test, rep(0, h_test - 1), optim$solution[h_test + 24 * 4], rep(0, times = 24 - h_test)) 
         x_test <- c(x_test, rep(0, h_test - 1), optim$solution[h_test + 24 * 5], rep(0, times = 24 - h_test)) #TZ2
         x_test <- c(x_test, rep(0, h_test - 1), optim$solution[h_test + 24 * 6], rep(0, times = 24 - h_test))
         x_test <- c(x_test, rep(0, h_test - 1), optim$solution[h_test + 24 * 7], rep(0, times = 24 - h_test))
         x_test <- c(x_test, rep(0, h_test - 1), optim$solution[h_test + 24 * 8], rep(0, times = 24 - h_test))
         x_test <- c(x_test, rep(0, h_test - 1), optim$solution[h_test + 24 * 9], rep(0, times = 24 - h_test)) 
-        x_test <- c(x_test, rep(0, h_test - 1), optim$solution[h_test + 24 * 10], rep(0, times = 24 - h_test)) #TZ5
-        x_test <- c(x_test, rep(0, h_test - 1), optim$solution[h_test + 24 * 11], rep(0, times = 24 - h_test)) 
+        x_test <- c(x_test, rep(0, h_test - 1), optim$solution[h_test + 24 * 10]+20, rep(0, times = 24 - h_test)) #TZ4
+        x_test <- c(x_test, rep(0, h_test - 1), optim$solution[h_test + 24 * 11], rep(0, times = 24 - h_test))
         x_test <- c(x_test, rep(0, h_test - 1), optim$solution[h_test + 24 * 12], rep(0, times = 24 - h_test))
         x_test <- c(x_test, rep(0, h_test - 1), optim$solution[h_test + 24 * 13], rep(0, times = 24 - h_test))
-        x_test <- c(x_test, rep(0, h_test - 1), optim$solution[h_test + 24 * 14], rep(0, times = 24 - h_test)) 
-        x_test <- c(x_test, rep(0, h_test - 1), optim$solution[h_test + 24 * 15], rep(0, times = 24 - h_test)) # swing
+        x_test <- c(x_test, rep(0, h_test - 1), optim$solution[h_test + 24 * 14]+20, rep(0, times = 24 - h_test))
+        x_test <- c(x_test, rep(0, h_test - 1), optim$solution[h_test + 24 * 15], rep(0, times = 24 - h_test)) #TZ5
+        x_test <- c(x_test, rep(0, h_test - 1), optim$solution[h_test + 24 * 16], rep(0, times = 24 - h_test)) 
+        x_test <- c(x_test, rep(0, h_test - 1), optim$solution[h_test + 24 * 17], rep(0, times = 24 - h_test))
+        x_test <- c(x_test, rep(0, h_test - 1), optim$solution[h_test + 24 * 18], rep(0, times = 24 - h_test))
+        x_test <- c(x_test, rep(0, h_test - 1), optim$solution[h_test + 24 * 19], rep(0, times = 24 - h_test)) 
+        x_test <- c(x_test, rep(0, h_test - 1), optim$solution[h_test + 24 * 20], rep(0, times = 24 - h_test)) # swing
 
         printVariables(x_test, h_test, FALSE)
 
@@ -113,6 +119,7 @@ if (TRUE) {
         constraints_test <- c(constraints_test, a[h_test + 24 * 5])
         constraints_test <- c(constraints_test, a[h_test + 24 * 6])
         constraints_test <- c(constraints_test, a[h_test + 24 * 7])
+        constraints_test <- c(constraints_test, a[h_test + 24 * 8])
         constraints_test <- c(constraints_test, a[length(a)])
 
         cat("\nConstraints:", constraints_test)

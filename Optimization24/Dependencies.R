@@ -10,7 +10,7 @@ equalities = function(x) {
 
     eq <- c()
 
-    EQ_LENGTH = 8
+    EQ_LENGTH = 9
     grad_d1 <- c()
     grad_d2 <- c()
     grad_d3 <- c()
@@ -19,34 +19,37 @@ equalities = function(x) {
     grad_d6 <- c()
     grad_d7 <- c()
     grad_d8 <- c()
+    grad_d9 <- c()
 
     mST_25_KS4 <- F_mST_25_KS4()
     grad_mST_25_KS4 <- G_mST_25_KS4()
 
     for (i in 1:24) {
         # bilanse masy w turbinach
-        d1 = var@mST_TZ1_in[i] - var@mST_TZ1_up25[i] - var@mST_TZ1_up13[i] - var@mST_TZ1_up06[i] - var@mST_TZ1_wyd[i]
-        grad_d1[[i]] = c(1, -1, -1, -1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0,0,0)
+        d1 = var@mST_TZ1_in[i] - var@mST_TZ1_up25[i] - var@mST_TZ1_up13[i] - var@mST_TZ1_up06[i] - var@mST_TZ1_wyd[i] 
+        grad_d1[[i]] = c(1, -1, -1, -1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
         d2 = var@mST_TZ2_in[i] - var@mST_TZ2_up25[i] - var@mST_TZ2_up13[i] - var@mST_TZ2_up06[i] - var@mST_TZ2_kond[i]
-        grad_d2[[i]] = c(0, 0, 0, 0,0, 1, -1, -1, -1, -1, 0, 0, 0, 0, 0,0)
+        grad_d2[[i]] = c(0, 0, 0, 0, 0, 1, -1, -1, -1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
         d6 = var@mST_TZ5_in[i] - var@mST_TZ5_up25[i] - var@mST_TZ5_up13[i] - var@mST_TZ5_up06[i] - var@mST_TZ5_kond[i]
-        grad_d6[[i]] = c(0, 0, 0, 0,0, 0, 0, 0, 0, 0, 1, -1, -1, -1, -1,0)
+        grad_d6[[i]] = c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, -1, -1, -1, 0)
+        d9 = var@mST_TZ4_in[i] - var@mST_TZ4_up25[i] - var@mST_TZ4_up13[i] - var@mST_TZ4_up06[i] - var@mST_TZ4_wyd[i]
+        grad_d9[[i]] = c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, -1, -1, -1, 0, 0, 0, 0, 0, 0)
 
         # zapotrzebowanie na parê (suma na kolektory)
-        d3 = var@mST_TZ1_up25[i] + var@mST_TZ2_up25[i] + var@mST_TZ5_up25[i] - zap_par_25[i]
-        grad_d3[[i]] = c(0, 1, 0, 0,0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0,0)
-        d4 = var@mST_TZ1_up13[i] + var@mST_TZ2_up13[i] + var@mST_TZ5_up13[i] - zap_par_13[i]
-        grad_d4[[i]] = c(0, 0, 1, 0, 0,0, 0, 1, 0, 0, 0, 0, 1, 0, 0,0)
-        d5 = var@mST_TZ1_up06[i] + var@mST_TZ2_up06[i] + var@mST_TZ5_up06[i] - zap_par_06[i]
-        grad_d5[[i]] = c(0, 0, 0, 1,0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0,0)
+        d3 = var@mST_TZ1_up25[i] + var@mST_TZ2_up25[i] + var@mST_TZ4_up25[i] + var@mST_TZ5_up25[i] - zap_par_25[i]
+        grad_d3[[i]] = c(0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0)
+        d4 = var@mST_TZ1_up13[i] + var@mST_TZ2_up13[i] + var@mST_TZ4_up13[i] + var@mST_TZ5_up13[i] - zap_par_13[i]
+        grad_d4[[i]] = c(0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0)
+        d5 = var@mST_TZ1_up06[i] + var@mST_TZ2_up06[i] + var@mST_TZ4_up06[i] + var@mST_TZ5_up06[i] - zap_par_06[i]
+        grad_d5[[i]] = c(0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0)
 
         # KS4
         d7 = var@mST_TZ5_in[i] - mST_KS4[i] - var@mST_KS4_swing[i]
-        grad_d7[[i]] = c(0, 0, 0, 0,0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0,-1)
+        grad_d7[[i]] = c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, -1)
 
         # TZ5 up25
         d8 = var@mST_TZ5_up25[i] - mST_25_KS4[i]
-        grad_d8[[i]] = c(0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0,0) - grad_mST_25_KS4[[i]]
+        grad_d8[[i]] = c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0) - grad_mST_25_KS4[[i]]
 
         eq[(24 * 0 + 0) + 1 * i] = d1
         eq[(24 * 1 + 0) + 1 * i] = d2
@@ -56,6 +59,7 @@ equalities = function(x) {
         eq[(24 * 5 + 0) + 1 * i] = d6
         eq[(24 * 6 + 0) + 1 * i] = d7
         eq[(24 * 7 + 0) + 1 * i] = d8
+        eq[(24 * 8 + 0) + 1 * i] = d9
     }
 
     # swing: jedno równanie dopisane na koñcu - na pozycji (EQ_LENGTH * 24) + 1
@@ -86,6 +90,7 @@ equalities = function(x) {
         GRADS[[5]] <- grad_d5[[h_r]] #c(0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0)
         GRADS[[7]] <- grad_d7[[h_r]] #c(0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0)
         GRADS[[8]] <- grad_d8[[h_r]] #c(0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0)
+        GRADS[[9]] <- grad_d9[[h_r]] #c(0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0)
 
         for (j in 1:(X_LENGTH * 24)) {
             h_x <- j %% 24
@@ -135,13 +140,13 @@ inequalities = function(x) {
     for (i in 1:24) {
         # ograniczenia turbin
         d1 = (var@mST_TZ1_up25[i] + var@mST_TZ1_up13[i]) - 60
-        grad_d1[[i]] = c(0, 1, 1, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0)
+        grad_d1[[i]] = c(0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
         d2 = (var@mST_TZ2_up06[i] + var@mST_TZ2_kond[i]) - 260
-        grad_d2[[i]] = c(0, 0, 0, 0,0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0,0)
-        d3 = 0.9 * (zap_par_25[i] - mST_25_KS4[i]) - var@mST_TZ1_up25[i]
-        grad_d3[[i]] = c(0, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+        grad_d2[[i]] = c(0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+        d3 = 0.9 * (zap_par_25[i] - mST_25_KS4[i]) - var@mST_TZ1_up25[i] - ifelse(configEC@TZ1[i] == TRUE, 0, 1000) #hak - nie bierze pod uwage gdy TZ1 wy³¹czone
+        grad_d3[[i]] = c(0, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
         d4 = (var@mST_TZ1_up06[i] + var@mST_TZ1_wyd[i]) - 240
-        grad_d4[[i]] = c(0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+        grad_d4[[i]] = c(0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
 
         if (i == 1 || i == 24) {
             d5 = var@mST_TZ1_in[i] - mST_TZ1_in.max
@@ -212,25 +217,25 @@ inequalities = function(x) {
         # dopuszczalna prêdkoœæ zmiany obci¹¿enia K7
         if (i == 1) {
             d5 = var@mST_TZ1_in[i] - mST_TZ1_in.max
-            grad_d5_Previous[[i]] = c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
-            grad_d5_Current[[i]] = c(1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
-            grad_d5_Next[[i]] = c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+            grad_d5_Previous[[i]] = c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+            grad_d5_Current[[i]] = c(1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+            grad_d5_Next[[i]] = c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
         } else {
             d5 = var@mST_TZ1_in[i] - var@mST_TZ1_in[i - 1] - 30
-            grad_d5_Previous[[i]] = c(-1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
-            grad_d5_Current[[i]] = c(1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
-            grad_d5_Next[[i]] = c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+            grad_d5_Previous[[i]] = c(-1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+            grad_d5_Current[[i]] = c(1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+            grad_d5_Next[[i]] = c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
         }
         if (i == 1) {
             d6 = var@mST_TZ1_in[i] - mST_TZ1_in.max
-            grad_d6_Previous[[i]] = c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
-            grad_d6_Current[[i]] = c(1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
-            grad_d6_Next[[i]] = c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+            grad_d6_Previous[[i]] = c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+            grad_d6_Current[[i]] = c(1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+            grad_d6_Next[[i]] = c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
         } else {
             d6 = - var@mST_TZ1_in[i] + var@mST_TZ1_in[i - 1] - 30
-            grad_d6_Previous[[i]] = c(1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
-            grad_d6_Current[[i]] = c(-1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
-            grad_d6_Next[[i]] = c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+            grad_d6_Previous[[i]] = c(1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+            grad_d6_Current[[i]] = c(-1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+            grad_d6_Next[[i]] = c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
         }
 
         ieq[(24 * (IEQ_LENGTH + 0)) + 1 * i] = d5

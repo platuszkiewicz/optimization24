@@ -10,9 +10,13 @@ KP_TZ1 = function(x) {
     result <- c()
 
     for (i in 1:24) {
-        mFU1_K7[i] <<- (0.0227 * var@mST_TZ1_in[i]  + 3.7972) * 3.6 # t/h
-        mFU2_K7[i] <<- (0.0568 * var@mST_TZ1_in[i]  - 8.1435) * 3.6 # t/h
-        result <- c(result, cFU1_K7[i] * mFU1_K7[i] + cFU2_K7[i] * mFU2_K7[i] + cEN_BIO * (mFU1_K7[i] + mFU2_K7[i]) + cWA_DEMI * var@mST_TZ1_in[i])
+        if (configEC@TZ1[i] == TRUE) {
+            mFU1_K7[i] <<- (0.0227 * var@mST_TZ1_in[i] + 3.7972) * 3.6 # t/h
+            mFU2_K7[i] <<- (0.0568 * var@mST_TZ1_in[i] - 8.1435) * 3.6 # t/h
+            result <- c(result, cFU1_K7[i] * mFU1_K7[i] + cFU2_K7[i] * mFU2_K7[i] + cEN_BIO * (mFU1_K7[i] + mFU2_K7[i]) + cWA_DEMI * var@mST_TZ1_in[i])
+        } else {
+            result <- c(result,0)
+        }
     }
 
     return (result)
@@ -25,6 +29,17 @@ KP_TZ2 = function(x) {
 
     for (i in 1:24) {
         result <- c(result, steamCostTZ2[i] * var@mST_TZ2_in[i])
+    }
+
+    return(result)
+}
+
+KP_TZ4 = function(x) {
+    var <- Variables(x)
+    result <- c()
+
+    for (i in 1:24) {
+        result <- c(result, steamCostTZ4[i] * var@mST_TZ4_in[i])
     }
 
     return(result)
@@ -45,8 +60,65 @@ grad_KP_TZ1 = function(x) {
     var <- Variables(x)
     grad <- c()
 
+    if (configEC@TZ1[i] == TRUE) {
+        for (i in 1:24) {
+            grad[(24 * 0 + 0) + 1 * i] = cFU1_K7[i] * (0.0227) * 3.6 + cFU2_K7[i] * (0.0568) * 3.6 + cEN_BIO * (0.0227 + 0.0568) * 3.6 + cWA_DEMI
+            grad[(24 * 1 + 0) + 1 * i] = 0
+            grad[(24 * 2 + 0) + 1 * i] = 0
+            grad[(24 * 3 + 0) + 1 * i] = 0
+            grad[(24 * 4 + 0) + 1 * i] = 0
+            grad[(24 * 5 + 0) + 1 * i] = 0
+            grad[(24 * 6 + 0) + 1 * i] = 0
+            grad[(24 * 7 + 0) + 1 * i] = 0
+            grad[(24 * 8 + 0) + 1 * i] = 0
+            grad[(24 * 9 + 0) + 1 * i] = 0
+            grad[(24 * 10 + 0) + 1 * i] = 0
+            grad[(24 * 11 + 0) + 1 * i] = 0
+            grad[(24 * 12 + 0) + 1 * i] = 0
+            grad[(24 * 13 + 0) + 1 * i] = 0
+            grad[(24 * 14 + 0) + 1 * i] = 0
+            grad[(24 * 15 + 0) + 1 * i] = 0
+            grad[(24 * 16 + 0) + 1 * i] = 0
+            grad[(24 * 17 + 0) + 1 * i] = 0
+            grad[(24 * 18 + 0) + 1 * i] = 0
+            grad[(24 * 19 + 0) + 1 * i] = 0
+            grad[(24 * 20 + 0) + 1 * i] = 0
+        }
+    } else {
+        for (i in 1:24) {
+            grad[(24 * 0 + 0) + 1 * i] = 0
+            grad[(24 * 1 + 0) + 1 * i] = 0
+            grad[(24 * 2 + 0) + 1 * i] = 0
+            grad[(24 * 3 + 0) + 1 * i] = 0
+            grad[(24 * 4 + 0) + 1 * i] = 0
+            grad[(24 * 5 + 0) + 1 * i] = 0
+            grad[(24 * 6 + 0) + 1 * i] = 0
+            grad[(24 * 7 + 0) + 1 * i] = 0
+            grad[(24 * 8 + 0) + 1 * i] = 0
+            grad[(24 * 9 + 0) + 1 * i] = 0
+            grad[(24 * 10 + 0) + 1 * i] = 0
+            grad[(24 * 11 + 0) + 1 * i] = 0
+            grad[(24 * 12 + 0) + 1 * i] = 0
+            grad[(24 * 13 + 0) + 1 * i] = 0
+            grad[(24 * 14 + 0) + 1 * i] = 0
+            grad[(24 * 15 + 0) + 1 * i] = 0
+            grad[(24 * 16 + 0) + 1 * i] = 0
+            grad[(24 * 17 + 0) + 1 * i] = 0
+            grad[(24 * 18 + 0) + 1 * i] = 0
+            grad[(24 * 19 + 0) + 1 * i] = 0
+            grad[(24 * 20 + 0) + 1 * i] = 0
+        }
+    }
+    
+    return (grad)
+}
+
+grad_KP_TZ4 = function(x) {
+    var <- Variables(x)
+    grad <- c()
+
     for (i in 1:24) {
-        grad[(24 * 0 + 0) + 1 * i] = cFU1_K7[i] * (0.0227) * 3.6 + cFU2_K7[i] * (0.0568) * 3.6 + cEN_BIO * (0.0227 + 0.0568) * 3.6 + cWA_DEMI
+        grad[(24 * 0 + 0) + 1 * i] = 0
         grad[(24 * 1 + 0) + 1 * i] = 0
         grad[(24 * 2 + 0) + 1 * i] = 0
         grad[(24 * 3 + 0) + 1 * i] = 0
@@ -56,12 +128,17 @@ grad_KP_TZ1 = function(x) {
         grad[(24 * 7 + 0) + 1 * i] = 0
         grad[(24 * 8 + 0) + 1 * i] = 0
         grad[(24 * 9 + 0) + 1 * i] = 0
-        grad[(24 * 10 + 0) + 1 * i] = 0
+        grad[(24 * 10 + 0) + 1 * i] = steamCostTZ4[i]
         grad[(24 * 11 + 0) + 1 * i] = 0
         grad[(24 * 12 + 0) + 1 * i] = 0
         grad[(24 * 13 + 0) + 1 * i] = 0
         grad[(24 * 14 + 0) + 1 * i] = 0
         grad[(24 * 15 + 0) + 1 * i] = 0
+        grad[(24 * 16 + 0) + 1 * i] = 0
+        grad[(24 * 17 + 0) + 1 * i] = 0
+        grad[(24 * 18 + 0) + 1 * i] = 0
+        grad[(24 * 19 + 0) + 1 * i] = 0
+        grad[(24 * 20 + 0) + 1 * i] = 0
     }
     
     return (grad)
@@ -88,9 +165,14 @@ grad_KP_TZ2 = function(x) {
         grad[(24 * 13 + 0) + 1 * i] = 0
         grad[(24 * 14 + 0) + 1 * i] = 0
         grad[(24 * 15 + 0) + 1 * i] = 0
+        grad[(24 * 16 + 0) + 1 * i] = 0
+        grad[(24 * 17 + 0) + 1 * i] = 0
+        grad[(24 * 18 + 0) + 1 * i] = 0
+        grad[(24 * 19 + 0) + 1 * i] = 0
+        grad[(24 * 20 + 0) + 1 * i] = 0
     }
-    
-    return (grad)
+
+    return(grad)
 }
 
 grad_KP_TZ5 = function(x) {
@@ -114,6 +196,11 @@ grad_KP_TZ5 = function(x) {
         grad[(24 * 13 + 0) + 1 * i] = 0
         grad[(24 * 14 + 0) + 1 * i] = 0
         grad[(24 * 15 + 0) + 1 * i] = 0
+        grad[(24 * 16 + 0) + 1 * i] = 0
+        grad[(24 * 17 + 0) + 1 * i] = 0
+        grad[(24 * 18 + 0) + 1 * i] = 0
+        grad[(24 * 19 + 0) + 1 * i] = 0
+        grad[(24 * 20 + 0) + 1 * i] = 0
     }
     
     return (grad)
@@ -131,7 +218,7 @@ cCER_GREEN <- 65 # PLN / MWh
 KE = function(x) {
     var <- Variables(x)
     result <- c()
-    PELec <- (PEL_TZ1(x) + PEL_TZ2(x) + PEL_TZ5(x))
+    PELec <- (PEL_TZ1(x) + PEL_TZ2(x) + PEL_TZ4(x) + PEL_TZ5(x))
 
     for (i in 1:24) {
         PELzakup <- 0 
@@ -156,9 +243,9 @@ KE = function(x) {
 
 grad_KE = function(x) {
 
-    PELec <- (PEL_TZ1(x) + PEL_TZ2(x) + PEL_TZ5(x))
+    PELec <- (PEL_TZ1(x) + PEL_TZ2(x) + PEL_TZ4(x) + PEL_TZ5(x))
 
-    grad <- (grad_PEL_TZ1(x) + grad_PEL_TZ2(x) + grad_PEL_TZ5(x))
+    grad <- (grad_PEL_TZ1(x) + grad_PEL_TZ2(x) + grad_PEL_TZ4(x) + grad_PEL_TZ5(x))
 
     for (i in 1:(24 * X_LENGTH)) {
         h <- (i %% 24)
