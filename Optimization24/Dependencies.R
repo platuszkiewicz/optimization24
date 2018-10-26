@@ -36,12 +36,12 @@ equalities = function(x) {
         grad_d9[[i]] = c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, -1, -1, -1, 0, 0, 0, 0, 0, 0)
 
         # zapotrzebowanie na parê (suma na kolektory)
-        d3 = var@mST_TZ1_up25[i] + var@mST_TZ2_up25[i] + var@mST_TZ4_up25[i] + var@mST_TZ5_up25[i] - zap_par_25[i]
-        grad_d3[[i]] = c(0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0)
-        d4 = var@mST_TZ1_up13[i] + var@mST_TZ2_up13[i] + var@mST_TZ4_up13[i] + var@mST_TZ5_up13[i] - zap_par_13[i]
-        grad_d4[[i]] = c(0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0)
-        d5 = var@mST_TZ1_up06[i] + var@mST_TZ2_up06[i] + var@mST_TZ4_up06[i] + var@mST_TZ5_up06[i] - zap_par_06[i]
-        grad_d5[[i]] = c(0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0)
+        d3 = var@mST_TZ1_up25[i] + var@mST_TZ2_up25[i] + var@mST_TZ4_up25[i] + var@mST_TZ5_up25[i] - zap_par_25[i] - PWP_EC_25[i] - mST_25_KS4[i]
+        grad_d3[[i]] = c(0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0) - grad_PWP_EC_25[[i]] - grad_mST_25_KS4[[i]]
+        d4 = var@mST_TZ1_up13[i] + var@mST_TZ2_up13[i] + var@mST_TZ4_up13[i] + var@mST_TZ5_up13[i] - zap_par_13[i] - PWP_EC_13[i]
+        grad_d4[[i]] = c(0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0) - grad_PWP_EC_13[[i]]
+        d5 = var@mST_TZ1_up06[i] + var@mST_TZ2_up06[i] + var@mST_TZ4_up06[i] + var@mST_TZ5_up06[i] - zap_par_06[i] - PWP_EC_06[i]
+        grad_d5[[i]] = c(0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0) - grad_PWP_EC_06[[i]]
 
         # KS4
         d7 = var@mST_TZ5_in[i] - mST_KS4[i] - var@mST_KS4_swing[i]
@@ -116,7 +116,7 @@ equalities = function(x) {
     eqg <- rbind(eqg, c(rep(0, times = (X_LENGTH - 1) * 24), rep(1, times = 24)))
 
     return(list("constraints" = eq,
-        "jacobian" = eqg))
+    "jacobian" = eqg))
 }
 
 # Ograniczenia - nierównoœci f(x) < 0
@@ -135,6 +135,10 @@ inequalities = function(x) {
 
     mST_25_KS4 <- F_mST_25_KS4()
     grad_mST_25_KS4 <- G_mST_25_KS4()
+    m09grad_PWP_EC_25 <- c()
+    for (j in 1:24) {
+        m09grad_PWP_EC_25[[j]] = 0.9 * grad_PWP_EC_25[[j]]
+    }
 
     # ograniczenia gdzie wyznaczam gradient dla jednej godziny
     for (i in 1:24) {
@@ -143,8 +147,8 @@ inequalities = function(x) {
         grad_d1[[i]] = c(0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
         d2 = (var@mST_TZ2_up06[i] + var@mST_TZ2_kond[i]) - 260
         grad_d2[[i]] = c(0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
-        d3 = 0.9 * (zap_par_25[i] - mST_25_KS4[i]) - var@mST_TZ1_up25[i] - ifelse(configEC@TZ1[i] == TRUE, 0, 1000) #hak - nie bierze pod uwage gdy TZ1 wy³¹czone
-        grad_d3[[i]] = c(0, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+        d3 = 0.9 * (zap_par_25[i]) - var@mST_TZ1_up25[i] - ifelse(configEC@TZ1[i] == TRUE, 0, 1000) + 0.9*PWP_EC_25[i] #hak - nie bierze pod uwage gdy TZ1 wy³¹czone + PWP_EC_25[i]
+        grad_d3[[i]] = c(0, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0) + m09grad_PWP_EC_25[[i]]
         d4 = (var@mST_TZ1_up06[i] + var@mST_TZ1_wyd[i]) - 240
         grad_d4[[i]] = c(0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
 

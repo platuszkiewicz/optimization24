@@ -206,6 +206,40 @@ printVariables = function(x,n,chart) {
     }
 }
 
-# Inne zmienne opisuj¹ce stan uk³adu
+#######################################
+### Inne zmienne opisuj¹ce stan uk³adu
+#######################################
+
+# Paliwa
 mFU1_K7 <- c(rep(0,times=24))
 mFU2_K7 <- c(rep(0, times = 24))
+
+# Potrzeby w³asne
+#PWP_EC_25 <- c(rep(0, times = 24))
+#PWP_EC_13 <- c(rep(0, times = 24))
+#PWP_EC_06 <- c(rep(0, times = 24))
+#grad_PWP_EC_25 <- c(rep(0, times = 24 * X_LENGTH))
+#grad_PWP_EC_13 <- c(rep(0, times = 24 * X_LENGTH))
+#grad_PWP_EC_06 <- c(rep(0, times = 24 * X_LENGTH))
+
+# Wydajnoœæ kot³ów
+mST_K7 <- c(rep(0, times = 24))
+mST_K1 <- c(rep(0, times = 24))
+mST_K6 <- c(rep(0, times = 24))
+mST_K4 <- c(rep(0, times = 24))
+mST_K5 <- c(rep(0, times = 24))
+
+#grad_mST_K7 <- c(rep(0, times = 24 * X_LENGTH))
+#grad_mST_K1 <- c(rep(0, times = 24 * X_LENGTH))
+#grad_mST_K6 <- c(rep(0, times = 24 * X_LENGTH))
+#grad_mST_K4 <- c(rep(0, times = 24 * X_LENGTH))
+#grad_mST_K5 <- c(rep(0, times = 24 * X_LENGTH))
+
+# Wydajnoœæ SRS
+mST_SRS_TZ1 <- c(rep(0, times = 24))
+mST_SRS_TZ2_06 <- c(rep(0, times = 24))
+mST_SRS_TZ2_13 <- c(rep(0, times = 24))
+mST_SRS_TZ4 <- c(rep(0, times = 24))
+mST_SRS_TZ5_06 <- c(rep(0, times = 24))
+mST_SRS_TZ5_13 <- c(rep(0, times = 24))
+mST_SRS_TZ5_25 <- c(rep(0, times = 24))

@@ -107,5 +107,9 @@ steamCostTZ1 = rep(costTZ1,times=24)
 steamCostTZ2 = rep(costTZ2,times=24)
 steamCostTZ4 = rep(costTZ4,times=24)
 steamCostTZ5 = rep(costTZ5, times = 24)
-c_RDN[18] = c_RDN[18] + 100
-c_RDN[19] = c_RDN[18] + 100
+
+#c_RDN[18] = c_RDN[18] + 100
+#c_RDN[19] = c_RDN[18] + 100
+zap_par_25 = zap_par_25 - c(rep(44, times = 24)) # 30-KS4, 14-EC
+zap_par_13 = zap_par_13 - c(rep(16, times = 24)) # 16-EC
+zap_par_06 = zap_par_06 - c(rep(45, times = 24)) # 45-EC

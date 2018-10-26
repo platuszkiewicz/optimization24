@@ -11,22 +11,26 @@ start.time <- proc.time()[[3]]
 source("Configuration.R") # konfiguracja EC
 source("Input.R")         # dane wejœciowe
 source("Variables.R")     # zmienne manipulacyjne
+source("Constants.R")     # sta³e
 source("Constraints.R")   # ograniczenia zmiennych manipulacyjnych
 source("Dependencies.R")  # zale¿noœci (dodatkowe ograniczenia) zmiennych manipulacyjnych
 source("Turbines2.R")     # charakterystyki turbin
 source("Costs.R")         # koszty
 source("Auxiliaries.R")   # potrzeby w³asne
+source("Penalty.R")       # funkcja kary
+source("IterFunc.R")      # funkcja wywo³ywana przy ka¿dej iteracji
 
 #  #  #  #  #  #  #  #  #  #  #  #  #  #  #  #  #  #  #  #  #  #  #  #  #  #  #  #  #  #  #  #  
 
 # FC1 - minimalizuj koszty rozumiane jako: koszty produkcji pary + koszty zakupu e.e. - przychód z sprzeda¿y e.e.
 
 fc1 = function(x) {
-    return(sum(KE(x) + KP_TZ1(x) + KP_TZ2(x) + KP_TZ4(x) + KP_TZ5(x)))
+    iterFunc(x)
+    return(sum(KE(x) + KP_TZ1(x) + KP_TZ2(x) + KP_TZ4(x) + KP_TZ5(x))) # + penalty(x)
 }
 
 grad_fc1 = function(x) {
-    return((grad_KE(x) + grad_KP_TZ1(x) + grad_KP_TZ2(x) + grad_KP_TZ4(x) + grad_KP_TZ5(x)))
+    return((grad_KE(x) + grad_KP_TZ1(x) + grad_KP_TZ2(x) + grad_KP_TZ4(x) + grad_KP_TZ5(x))) #+ grad_penalty(x)
 }
 
 # optymalizacja
@@ -38,11 +42,11 @@ local_opts <- list("algorithm" = "NLOPT_LD_MMA",
   "xtol_abs" = 0.000001) 
 
 opts <- list("algorithm" = "NLOPT_LD_SLSQP",
-         "check_derivatives" = FALSE, # poka¿ raport ze sprawdzania pochodnych
+         "check_derivatives" = FALSE,     # poka¿ raport ze sprawdzania pochodnych
          #"check_derivatives_print " = "errors",
          "check_derivatives_tol" = 1e-03, # dok³adnoœæ sprawdzania pochodnych
-         "maxeval" = 30,                  # 1000
-         "maxtime" = 140,                  # [s]
+         "maxeval" = 30,                  # maksymalna iloœæ iteracji [-]
+         "maxtime" = 55,                  # maksymalny czas rozwi¹zywania [s]
          "local_opts" = local_opts,
          "xtol_rel" = 1.0e-14,
          "ftol_rel" = 1.0e-07,
@@ -68,6 +72,11 @@ optim <- nloptr(x0 = constraintsDefault,
 optim
 
 end.time <- proc.time()[[3]]
+cat("mST_K7: ", round(mST_K7, digits = 0))
+cat("\nmST_K1: ", round(mST_K1, digits = 0))
+cat("\nmST_K6: ", round(mST_K6, digits = 0))
+cat("\nmST_K4: ", round(mST_K4, digits = 0))
+cat("\nmST_K5: ", round(mST_K5, digits = 0))
 cat("\n ####### Calculation time: ", round(end.time - start.time, digits = 1), " seconds ##########")
 
 printVariables(optim$solution,24, TRUE)
